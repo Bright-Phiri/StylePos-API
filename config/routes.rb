@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         resources :inventory_levels, except: [:index, :destory]
       end
       resources :inventory_levels, only: [:index, :destroy]
+      resources :employees
     end
   end
 end
