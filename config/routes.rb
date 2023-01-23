@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       end
       resources :inventory_levels, only: [:index, :destroy]
       resources :employees
+      resources :customers
     end
   end
 end
