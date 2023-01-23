@@ -36,7 +36,7 @@ class Api::V1::EmployeesController < ApplicationController
   private
 
   def employee_params
-    params.require(:employee).permit(:name, :job_title, :phone_number)
+    params.require(:employee).permit(:name, :user_name, :job_title, :phone_number, :email, :password, :password_confirmation)
   end
 
   def set_employee
