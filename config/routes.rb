@@ -7,7 +7,10 @@ Rails.application.routes.draw do
   # root "articles#index"
   namespace :api do
     namespace :v1 do
-      resources :items
+      resources :items do
+        resources :inventory_levels, except: [:index, :destory]
+      end
+      resources :inventory_levels, only: [:index, :destroy]
     end
   end
 end
