@@ -20,6 +20,19 @@ class Api::V1::EmployeesController < ApplicationController
     end
   end
 
+  def update
+    if @employee.update(employee_params)
+      render json: @employee, status: :ok
+    else
+      render json: @employee.errors.full_messages, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @employee.destroy!
+    head :no_content
+  end
+
   private
 
   def employee_params
