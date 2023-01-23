@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product: one
+  order: one
+  quantity: 1
+  price: 9.99
+
+two:
+  product: two
+  order: two
+  quantity: 1
+  price: 9.99
