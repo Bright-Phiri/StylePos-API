@@ -3,6 +3,7 @@
 class Employee < ApplicationRecord
   VALID_ROLES = ['Cashier', 'Store Manager', 'SysAdmin'].freeze
   has_many :orders
+  validates_associated :orders
   has_secure_password
   validates :name, presence: true
   validates :password, length: { in: 6..8 }
