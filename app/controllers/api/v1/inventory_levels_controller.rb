@@ -13,7 +13,7 @@ class Api::V1::InventoryLevelsController < ApplicationController
 
   def create
     item = Item.find(params[:item_id])
-    raise StandardError, 'Inventory level already exists' unless item.inventory_level.nil?
+    raise ExceptionHandler::InventoryLevelError, 'Inventory level already exists' unless item.inventory_level.nil?
 
     inventory_level = item.create_inventory_level(inventory_level_params)
     if inventory_level.new_record?
