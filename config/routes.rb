@@ -11,9 +11,10 @@ Rails.application.routes.draw do
         resources :inventory_levels, except: [:index, :destory]
       end
       resources :inventory_levels, only: [:index, :destroy]
+      resources :orders, only: :index
       resources :customers
       resources :employees do
-        resources :orders
+        resources :orders, except: :index
       end
     end
   end
