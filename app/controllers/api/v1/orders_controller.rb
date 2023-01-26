@@ -24,6 +24,7 @@ class Api::V1::OrdersController < ApplicationController
   def set_total_price
     @line_item = @item.line_items.build(line_item_params.merge(price: @item.price))
     @line_item.total = @line_item.quantity * @line_item.price
+    render json: @line_item
   end
 
   def order_params
