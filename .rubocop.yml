@@ -12,6 +12,8 @@ Metrics/BlockLength:
     - config/routes.rb
 Documentation:
   Enabled: false
+Style/RedundantSelf:
+  Enabled: false
 Layout/EndOfLine:
    Enabled: False
 Lint/MissingSuper:
