@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_23_132454) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_27_132137) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -58,23 +58,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_132454) do
     t.decimal "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "total"
     t.index ["item_id"], name: "index_line_items_on_item_id"
     t.index ["order_id"], name: "index_line_items_on_order_id"
   end
 
   create_table "orders", force: :cascade do |t|
     t.decimal "total"
-    t.bigint "customer_id", null: false
     t.bigint "employee_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_orders_on_customer_id"
     t.index ["employee_id"], name: "index_orders_on_employee_id"
   end
 
   add_foreign_key "inventory_levels", "items"
   add_foreign_key "line_items", "items"
   add_foreign_key "line_items", "orders"
-  add_foreign_key "orders", "customers"
   add_foreign_key "orders", "employees"
 end

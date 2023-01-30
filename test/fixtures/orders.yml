@@ -2,10 +2,8 @@
 
 one:
   total: 9.99
-  customer: one
   employee: one
 
 two:
   total: 9.99
-  customer: two
   employee: two

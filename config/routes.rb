@@ -14,7 +14,11 @@ Rails.application.routes.draw do
       resources :orders, only: :index
       resources :customers
       resources :employees do
-        resources :orders, except: :index
+        resources :orders, except: :index do
+          post 'add_line_item', action: :add_line_item, controller: 'orders'
+          delete 'remove_line_item/:id', action: :remove_line_item, controller: 'orders'
+          post 'set_total_price', action: :set_total_price, controller: 'orders'
+        end
       end
     end
   end
