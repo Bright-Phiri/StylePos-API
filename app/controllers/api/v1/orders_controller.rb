@@ -35,8 +35,10 @@ class Api::V1::OrdersController < ApplicationController
     if @line_item.new_record?
       render json: @line_item.errors.full_messages, status: :unprocessable_entity
     else
-      order.update!(total: (order.total + @line_item.total).round(2))
-      @item.inventory_level.update!(quantity: @item.inventory - @line_item.quantity)
+      ActiveRecord::Base.transaction do
+        order.update!(total: (order.total + @line_item.total).round(2))
+        @item.inventory_level.update!(quantity: @item.inventory - @line_item.quantity)
+      end
       render json: order.line_items, status: :created
     end
   end
