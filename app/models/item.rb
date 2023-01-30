@@ -10,4 +10,8 @@ class Item < ApplicationRecord
   def enough_inventory?(requested_quantity)
     inventory_level.quantity.positive? && requested_quantity <= inventory_level.quantity
   end
+
+  def inventory
+    inventory_level.quantity
+  end
 end
