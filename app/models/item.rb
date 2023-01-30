@@ -6,4 +6,8 @@ class Item < ApplicationRecord
   validates_associated :inventory_level
   validates :name, :size, :color, presence: true
   validates :price, numericality: { greater_than: 0 }
+
+  def enough_inventory?(requested_quantity)
+    inventory_level.quantity.positive? && requested_quantity <= inventory_level.quantity
+  end
 end

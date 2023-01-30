@@ -29,7 +29,7 @@ class Api::V1::OrdersController < ApplicationController
   def add_line_item
     order = Order.find(params[:order_id])
     @item = Item.find(params[:line_item][:item_id])
-    raise ExceptionHandler::InventoryLevelError, 'Out of stock' unless @item.inventory_level.quantity.positive?
+    raise ExceptionHandler::InventoryLevelError, 'Not enough inventory' unless @item.enough_inventory?(params[:line_item][:quantity].to_i)
 
     @line_item = order.line_items.create(line_item_params.merge(item_id: @item.id, price: @item.price, total: params[:line_item][:quantity] * @item.price))
     if @line_item.new_record?
