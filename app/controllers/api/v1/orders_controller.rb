@@ -29,14 +29,14 @@ class Api::V1::OrdersController < ApplicationController
   def add_line_item
     order = Order.find(params[:order_id])
     @item = Item.find(params[:line_item][:item_id])
+    raise ExceptionHandler::InventoryLevelError, 'Out of stock' unless @item.inventory_level.quantity.positive?
+
     @line_item = order.line_items.create(line_item_params.merge(item_id: @item.id, price: @item.price, total: params[:line_item][:quantity] * @item.price))
     if @line_item.new_record?
       render json: @line_item.errors.full_messages, status: :unprocessable_entity
     else
-      ActiveRecord::Base.transaction do
-        order.update(total: (order.total + @line_item.total).round(2))
-        @item.inventory_level.update(quantity: @item.inventory_level.quantity - @line_item.quantity)
-      end
+      order.update(total: (order.total + @line_item.total).round(2))
+      @item.inventory_level.update(quantity: @item.inventory_level.quantity - @line_item.quantity)
       render json: order.line_items, status: :created
     end
   end
