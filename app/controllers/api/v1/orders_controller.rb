@@ -17,6 +17,15 @@ class Api::V1::OrdersController < ApplicationController
     end
   end
 
+  def show
+    order = Order.find(params[:id])
+    if order.line_items.size.zero?
+      render json: line_items, status: :not_found
+    else
+      render json: line_items, status: :ok
+    end
+  end
+
   def add_line_item
     order = Order.find(params[:order_id])
     @item = Item.find(params[:line_item][:item_id])
