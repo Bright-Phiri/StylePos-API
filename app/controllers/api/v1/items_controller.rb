@@ -8,13 +8,13 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def show
-    render json: @item
+    render json: ItemRepresenter.new(@item).as_json
   end
 
   def create
     item = Item.new(item_params)
     if item.save
-      render json: item, status: :created
+      render json: ItemRepresenter.new(item).as_json, status: :created
     else
       render json: item.errors.full_messages, status: :unprocessable_entity
     end
@@ -22,7 +22,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def update
     if @item.update(item_params)
-      render json: @item, status: :ok
+      render json: ItemRepresenter.new(@item).as_json, status: :ok
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end
