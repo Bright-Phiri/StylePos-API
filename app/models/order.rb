@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Order < ApplicationRecord
-  scope :of_day, ->(date) { where(created_at: date.beginning_of_day..date.end_of_day) }
-  scope :daily_revenue, -> { where("created_at >= ?", Time.zone.today.beginning_of_day) }
+  scope :of_day, -> { where(created_at: Date.today.beginning_of_day..Date.today.end_of_day) }
+  scope :daily_revenue, -> { where(created_at: Date.today.beginning_of_day..Date.today.end_of_day) }
   scope :statistics, -> { created_in(Date.current.year).select(:id, :created_at, 'COUNT(id)').group(:id) }
   scope :created_in, ->(year) { where('extract(year from created_at) = ?', year) if year.present? }
   has_many :line_items

@@ -3,7 +3,6 @@
 class Api::V1::DashboardController < ApplicationController
   def index
     # Total number of transactions processed today
-    date = Date.today
     number_of_orders = Order.of_day(date).count
 
     # Total sales revenue
