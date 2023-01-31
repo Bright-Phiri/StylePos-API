@@ -14,6 +14,20 @@ class Item < ApplicationRecord
   end
 
   def inventory
+    return 0 unless inventory_level.present?
+
     inventory_level.quantity
+  end
+
+  def stock_level
+    return 'Not added' unless inventory_level.present?
+
+    if inventory_level.quantity <= inventory_level.reorder_level
+      'Low stock'
+    elsif inventory_level.quantity.zero?
+      'Out of stock'
+    else
+      'In stock'
+    end
   end
 end
