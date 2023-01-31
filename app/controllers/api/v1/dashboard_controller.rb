@@ -9,6 +9,12 @@ class Api::V1::DashboardController < ApplicationController
     # Total sales revenue
     total_sales = Order.sum(:total)
 
+    # Best-selling items
+    fastest_moving_items = Item.best_selling.limit(10)
+
+    # slowest moving items
+    slowest_moving_items = Item.slow_moving.limit(10)
+
     # monthly order statistics
     monthly_order_statistics = Order.statistics
 
