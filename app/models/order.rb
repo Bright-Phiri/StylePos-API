@@ -3,6 +3,7 @@
 class Order < ApplicationRecord
   scope :of_day, ->(date) { where(created_at: date.beginning_of_day..date.end_of_day) }
   scope :statistics, -> { created_in(Date.current.year).select(:id, :created_at, 'COUNT(id)').group(:id) }
+  scope :created_in, ->(year) { where('extract(year from created_at) = ?', year) if year.present? }
   has_many :line_items
   validates_associated :line_items
   belongs_to :employee

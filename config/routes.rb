@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :items do
         resources :inventory_levels, except: [:index, :destory]
       end
+      resources :dashboard, only: :index
       resources :inventory_levels, only: [:index, :destroy]
       resources :orders, only: [:index, :show]
       resources :customers
