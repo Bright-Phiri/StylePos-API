@@ -3,7 +3,7 @@
 class Api::V1::DashboardController < ApplicationController
   def index
     # Total number of transactions processed today
-    number_of_orders = Order.of_day(date).count
+    number_of_orders = Order.of_day.count
 
     # Total sales revenue
     total_sales = Order.sum(:total)
