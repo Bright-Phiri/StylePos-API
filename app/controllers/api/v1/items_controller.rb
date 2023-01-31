@@ -4,7 +4,7 @@ class Api::V1::ItemsController < ApplicationController
   before_action :set_item, only: [:update, :show, :destroy]
   def index
     items = Item.all
-    render json: items
+    render json: ItemsRepresenter.new(items).as_json
   end
 
   def show
