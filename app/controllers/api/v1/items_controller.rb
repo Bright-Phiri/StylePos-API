@@ -3,7 +3,7 @@
 class Api::V1::ItemsController < ApplicationController
   before_action :set_item, only: [:update, :show, :destroy]
   def index
-    items = Item.all
+    items = Item.preload(:inventory_level).all
     render json: ItemsRepresenter.new(items).as_json
   end
 
