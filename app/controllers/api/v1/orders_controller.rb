@@ -39,19 +39,19 @@ class Api::V1::OrdersController < ApplicationController
         order.update!(total: (order.total + @line_item.total).round(2))
         @item.inventory_level.update!(quantity: @item.inventory - @line_item.quantity)
       end
-      render json: LineItemsRepresenter.new(order.line_items).as_json, status: :created
+      render json: { order_total: order.total, line_items: LineItemsRepresenter.new(order.line_items).as_json }, status: :created
     end
   end
 
   def remove_line_item
-    order = Order.find(params[:order_id])
+    order = Order.preload(:line_items).find(params[:order_id])
     line_item = order.line_items.find(params[:id])
     ActiveRecord::Base.transaction do
       order.update!(total: (order.total - line_item.total).round(2))
       line_item.item.inventory_level.update!(quantity: line_item.item.inventory + line_item.quantity)
       line_item.destroy!
     end
-    head :no_content
+    render json: { order_total: order.total, line_items: LineItemsRepresenter.new(order.line_items.reload).as_json }, status: :ok
   end
 
   def set_total_price
