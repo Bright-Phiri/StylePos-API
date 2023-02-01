@@ -20,15 +20,15 @@ class Api::V1::OrdersController < ApplicationController
   def show
     order = Order.find(params[:id])
     if order.line_items.size.zero?
-      render json: order.line_items, status: :not_found
+      render json: LineItemsRepresenter.new(order.line_items).as_json, status: :not_found
     else
-      render json: order.line_items, status: :ok
+      render json: LineItemsRepresenter.new(order.line_items).as_json, status: :ok
     end
   end
 
   def add_line_item
     order = Order.find(params[:order_id])
-    @item = Item.find(params[:line_item][:item_id])
+    @item = Item.preload(:inventory_level).find(params[:line_item][:item_id])
     raise ExceptionHandler::InventoryLevelError, 'Not enough inventory' unless @item.enough_inventory?(params[:line_item][:quantity].to_i)
 
     @line_item = order.line_items.create(line_item_params.merge(item_id: @item.id, price: @item.price, total: params[:line_item][:quantity] * @item.price))
@@ -39,7 +39,7 @@ class Api::V1::OrdersController < ApplicationController
         order.update!(total: (order.total + @line_item.total).round(2))
         @item.inventory_level.update!(quantity: @item.inventory - @line_item.quantity)
       end
-      render json: order.line_items, status: :created
+      render json: LineItemsRepresenter.new(order.line_items).as_json, status: :created
     end
   end
 
