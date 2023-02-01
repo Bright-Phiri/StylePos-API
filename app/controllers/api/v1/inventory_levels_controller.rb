@@ -8,7 +8,7 @@ class Api::V1::InventoryLevelsController < ApplicationController
   end
 
   def show
-    render json: @inventory_level
+    render json: InventoryRepresenter.new(@inventory_level).as_json
   end
 
   def create
@@ -19,13 +19,13 @@ class Api::V1::InventoryLevelsController < ApplicationController
     if inventory_level.new_record?
       render json: inventory_level.errors.full_messages, status: :unprocessable_entity
     else
-      render json: inventory_level, status: :created
+      render json: InventoryRepresenter.new(inventory_level).as_json, status: :created
     end
   end
 
   def update
     if @inventory_level.update(inventory_level_params)
-      render json: @inventory_level, status: :ok
+      render json: InventoryRepresenter.new(@inventory_level).as_json, status: :ok
     else
       render json: @inventory_level.errors.full_messages, status: :unprocessable_entity
     end
