@@ -55,7 +55,7 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def set_total_price
-    render json: @line_item.to_json(include: :item)
+    render json: LineItemRepresenter.new(@line_item).as_json
   end
 
   private
