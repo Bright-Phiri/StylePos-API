@@ -4,7 +4,7 @@ class Api::V1::OrdersController < ApplicationController
   before_action :set_line_item, only: [:set_total_price]
   def index
     orders = Order.all
-    render json: orders
+    render json: OrdersRepresenter.new(orders).as_json
   end
 
   def create

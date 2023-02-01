@@ -11,6 +11,10 @@ class Order < ApplicationRecord
 
   after_validation :initialize_order, on: :create
 
+  def processed_by
+    employee.name
+  end
+
   private
 
   def initialize_order
