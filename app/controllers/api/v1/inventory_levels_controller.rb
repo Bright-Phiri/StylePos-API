@@ -4,7 +4,7 @@ class Api::V1::InventoryLevelsController < ApplicationController
   before_action :set_inventory_level, only: [:update, :show]
   def index
     inventory_levels = InventoryLevel.all
-    render json: inventory_levels
+    render json: InventoriesRepresenter.new(inventory_levels).as_json
   end
 
   def show
