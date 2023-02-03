@@ -35,10 +35,6 @@ class Api::V1::OrdersController < ApplicationController
     if @line_item.new_record?
       render json: @line_item.errors.full_messages, status: :unprocessable_entity
     else
-      ActiveRecord::Base.transaction do
-        order.update!(total: (order.total + @line_item.total).round(2))
-        @item.inventory_level.update!(quantity: @item.inventory - @line_item.quantity)
-      end
       render json: { order_total: order.total, line_items: LineItemsRepresenter.new(order.line_items).as_json }, status: :created
     end
   end
@@ -46,11 +42,7 @@ class Api::V1::OrdersController < ApplicationController
   def remove_line_item
     order = Order.preload(:line_items).find(params[:order_id])
     line_item = order.line_items.find(params[:id])
-    ActiveRecord::Base.transaction do
-      order.update!(total: (order.total - line_item.total).round(2))
-      line_item.item.inventory_level.update!(quantity: line_item.item.inventory + line_item.quantity)
-      line_item.destroy!
-    end
+    line_item.destroy!
     render json: { order_total: order.total, line_items: LineItemsRepresenter.new(order.line_items.reload).as_json }, status: :ok
   end
 
