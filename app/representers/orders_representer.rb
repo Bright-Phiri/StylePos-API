@@ -10,7 +10,7 @@ class OrdersRepresenter
       {
         id: order.id,
         processed_by: order.processed_by,
-        created_at: order.created_at,
+        transaction_date: order.created_at,
         total: order.total
       }
     end
