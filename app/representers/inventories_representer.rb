@@ -10,6 +10,7 @@ class InventoriesRepresenter
       {
         id: inventory.id,
         item: inventory.item_name,
+        item_id: inventory.item_id,
         quantity: inventory.quantity,
         reorder_level: inventory.reorder_level,
         supplier: inventory.supplier
