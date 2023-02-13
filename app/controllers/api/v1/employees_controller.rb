@@ -12,7 +12,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def create
-    employee = Employee.new(employee_params.merge(password: params[:password], password_confirmation: params[:password_confirmation]))
+    employee = Employee.new(employee_params)
     if employee.save
       render json: employee, status: :created
     else
@@ -36,7 +36,7 @@ class Api::V1::EmployeesController < ApplicationController
   private
 
   def employee_params
-    params.require(:employee).permit(:first_name, :last_name, :user_name, :job_title, :phone_number, :email)
+    params.require(:employee).permit(:first_name, :last_name, :user_name, :job_title, :phone_number, :email, :password, :password_confirmation)
   end
 
   def set_employee

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
           post 'set_total_price', action: :set_total_price, controller: 'orders'
         end
       end
+      post 'login', action: :login, controller: 'authentication'
     end
   end
 end
