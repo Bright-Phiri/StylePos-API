@@ -3,6 +3,7 @@
 class Item < ApplicationRecord
   scope :best_selling, -> { joins(:line_items).group(:id).order("SUM(line_items.quantity) DESC") }
   scope :slow_moving, -> { joins(:line_items).group(:id).order("SUM(line_items.quantity) ASC") }
+  scope :out_of_stock, -> { joins(:inventory_level).where('inventory_levels.quantity = ?', 0) }
   has_one :inventory_level, dependent: :destroy
   has_many :line_items
   validates_associated :inventory_level, :line_items
@@ -22,7 +23,7 @@ class Item < ApplicationRecord
   def stock_level
     return 'Not added' unless inventory_level.present?
 
-    if inventory_level.quantity <= inventory_level.reorder_level
+    if inventory_level.quantity <= inventory_level.reorder_level && inventory_level.quantity != 0
       'Low stock'
     elsif inventory_level.quantity.zero?
       'Out of stock'
