@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::AuthenticationController < ApplicationController
-  # skip_before_action :require_login, only: :login
+  skip_before_action :require_login, only: :login
   def login
     if Employee.exists?
       @user = Employee.find_by(user_name: params[:user_name])
