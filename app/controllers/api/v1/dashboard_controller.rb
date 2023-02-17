@@ -11,6 +11,12 @@ class Api::V1::DashboardController < ApplicationController
     # Daily total sales revenue
     daily_sales = Order.daily_revenue.sum(:total)
 
+    # Weekly total sales revenue
+    weekly_revenue = Order.weekly_revenue.sum(:total)
+
+    # Monthly total sales revenue
+    monthly_revenue = Order.monthly_revenue.sum(:total)
+
     # Best-selling items
     fastest_moving_items = Item.best_selling.limit(10)
 
@@ -20,6 +26,6 @@ class Api::V1::DashboardController < ApplicationController
     # monthly order statistics
     monthly_order_statistics = Order.statistics
 
-    render json: { no_of_orders: number_of_orders, t_sales: total_sales, b_selling_items: fastest_moving_items, s_moving_items: slowest_moving_items, m_order_statistics: monthly_order_statistics, d_revenue: daily_sales }
+    render json: { no_of_orders: number_of_orders, t_sales: total_sales, b_selling_items: fastest_moving_items, s_moving_items: slowest_moving_items, m_order_statistics: monthly_order_statistics, d_revenue: daily_sales, w_revenue: weekly_revenue, m_revenue: monthly_revenue }
   end
 end
