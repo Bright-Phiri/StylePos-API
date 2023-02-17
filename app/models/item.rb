@@ -4,6 +4,7 @@ class Item < ApplicationRecord
   scope :best_selling, -> { joins(:line_items).group(:id).order("SUM(line_items.quantity) DESC") }
   scope :slow_moving, -> { joins(:line_items).group(:id).order("SUM(line_items.quantity) ASC") }
   scope :out_of_stock, -> { joins(:inventory_level).where('inventory_levels.quantity = ?', 0) }
+  scope :in_stock, -> { joins(:inventory_level).where('inventory_levels.quantity > ?', 0) }
   has_one :inventory_level, dependent: :destroy
   has_many :line_items
   validates_associated :inventory_level, :line_items
