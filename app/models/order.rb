@@ -17,6 +17,10 @@ class Order < ApplicationRecord
     "#{employee.first_name} #{employee.last_name}"
   end
 
+  def created_at
+    attributes['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+  end
+
   private
 
   def initialize_order

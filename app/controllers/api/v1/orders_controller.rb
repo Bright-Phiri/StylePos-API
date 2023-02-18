@@ -20,7 +20,7 @@ class Api::V1::OrdersController < ApplicationController
   def show
     order = Order.find(params[:id])
     if order.line_items.size.zero?
-      render json: LineItemsRepresenter.new(order.line_items).as_json, status: :not_found
+      render json: { error: 'Order summary not found' }, status: :not_found
     else
       render json: LineItemsRepresenter.new(order.line_items).as_json, status: :ok
     end
