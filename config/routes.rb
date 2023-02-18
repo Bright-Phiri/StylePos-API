@@ -16,9 +16,8 @@ Rails.application.routes.draw do
       resources :customers
       resources :employees do
         resources :orders, except: [:index, :show] do
-          post 'add_line_item', action: :add_line_item, controller: 'orders'
-          delete 'remove_line_item/:id', action: :remove_line_item, controller: 'orders'
-          post 'set_total_price', action: :set_total_price, controller: 'orders'
+          resources :line_items, only: [:create, :destroy]
+          post 'set_total_price', action: :set_total_price, controller: 'line_items'
         end
       end
       post 'login', action: :login, controller: 'authentication'
