@@ -13,14 +13,14 @@ class LineItem < ApplicationRecord
   def update_inventory_level_and_total
     ActiveRecord::Base.transaction do
       self.order.update!(total: (self.order.total + self.total).round(2))
-      raise ExceptionHandler::InventoryLevelError, 'Failed to update inventory and total' unless self.item.inventory_level.update_attribute(:quantity, self.item.inventory - self.quantity)
+      raise ExceptionHandler::InventoryLevelError, 'Failed to update inventory' unless self.item.inventory_level.update_attribute(:quantity, self.item.inventory - self.quantity)
     end
   end
 
   def update_inventory_and_total
     ActiveRecord::Base.transaction do
       self.order.update!(total: (order.total - self.total).round(2))
-      raise ExceptionHandler::InventoryLevelError, 'Failed to update inventory and total' unless self.item.inventory_level.update_attribute(:quantity, self.item.inventory + self.quantity)
+      raise ExceptionHandler::InventoryLevelError, 'Failed to update inventory' unless self.item.inventory_level.update_attribute(:quantity, self.item.inventory + self.quantity)
     end
   end
 end
