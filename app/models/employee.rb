@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Employee < ApplicationRecord
-  VALID_ROLES = ['Cashier', 'Store Manager', 'SysAdmin'].freeze
+  VALID_ROLES = ['Cashier', 'Store Manager'].freeze
   has_many :orders
   validates_associated :orders
   has_secure_password
