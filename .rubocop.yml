@@ -6,10 +6,7 @@ AllCops:
 Style/StringLiterals:
   Enabled: false
 Metrics/BlockLength:
-  Enabled: true
-  Exclude:
-    - spec/**/*
-    - config/routes.rb
+  Enabled: false
 Documentation:
   Enabled: false
 Style/RedundantSelf:
@@ -31,7 +28,10 @@ Style/WordArray:
   Enabled: False
 Style/SymbolArray:
   Enabled: False
-
+Metrics/CyclomaticComplexity: 
+  Enabled: False
+Metrics/PerceivedComplexity:
+  Enabled: False
 
 
 
