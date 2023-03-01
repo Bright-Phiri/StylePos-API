@@ -8,11 +8,12 @@ class Api::V1::LineItemsController < ApplicationController
     item = Item.preload(:inventory_level).find(params[:line_item][:item_id])
     raise ExceptionHandler::InventoryLevelError, 'Not enough inventory' unless item.enough_inventory?(params[:line_item][:quantity].to_i)
 
-    line_item = order.line_items.create(line_item_params.merge(item_id: item.id, price: item.price, total: params[:line_item][:quantity] * item.price))
+    line_item = order.line_items.create(line_item_params.merge(item_id: item.id, price: item.price, vat: LineItem.calculate_vat(item.price, params[:line_item][:quantity].to_i), total: params[:line_item][:quantity] * item.price))
     if line_item.new_record?
       render json: line_item.errors.full_messages, status: :unprocessable_entity
     else
-      render json: { order_total: order.total, line_items: LineItemsRepresenter.new(order.line_items).as_json }, status: :created
+      sub_total = order.total - order.total_vat
+      render json: { vat: order.total_vat, order_total: order.total, sub_total:, line_items: LineItemsRepresenter.new(order.line_items).as_json }, status: :created
     end
   end
 
@@ -20,7 +21,8 @@ class Api::V1::LineItemsController < ApplicationController
     order = Order.preload(:line_items).find(params[:order_id])
     line_item = order.line_items.find(params[:id])
     line_item.destroy!
-    render json: { order_total: order.total, line_items: LineItemsRepresenter.new(order.line_items.reload).as_json }, status: :ok
+    sub_total = order.total - order.total_vat
+    render json: { vat: order.total_vat, order_total: order.total, sub_total:, line_items: LineItemsRepresenter.new(order.line_items.reload).as_json }, status: :ok
   end
 
   def set_total_price

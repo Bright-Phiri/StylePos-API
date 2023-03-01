@@ -17,6 +17,10 @@ class Order < ApplicationRecord
     "#{employee.first_name} #{employee.last_name}"
   end
 
+  def total_vat
+    line_items.sum(:vat)
+  end
+
   def created_at
     attributes['created_at'].strftime('%Y-%m-%d %H:%M:%S')
   end
