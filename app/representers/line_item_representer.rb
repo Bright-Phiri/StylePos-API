@@ -11,6 +11,7 @@ class LineItemRepresenter
       item: line_item.item.name,
       quantity: line_item.quantity,
       price: line_item.price,
+      vat: line_item.vat,
       total: line_item.total,
       created_at: line_item.created_at
     }

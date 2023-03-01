@@ -8,8 +8,8 @@ class LineItem < ApplicationRecord
   after_save :update_inventory_level_and_total
   before_destroy :update_inventory_and_total
 
-  def self.calculate_vat(selling_price, requested_quantity)
-    vat = requested_quantity * selling_price * (16.5 / 100.0)
+  def self.calculate_vat(pre_vat_price, requested_quantity)
+    vat = requested_quantity * pre_vat_price * (16.5 / 100.0)
     vat.round(2)
   end
 
