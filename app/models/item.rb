@@ -12,6 +12,8 @@ class Item < ApplicationRecord
   validates :price, numericality: { greater_than: 0 }
 
   def enough_inventory?(requested_quantity)
+    raise ExceptionHandler::InventoryLevelError, 'Inventory level not added' unless inventory_level.present?
+
     inventory_level.quantity.positive? && requested_quantity <= inventory_level.quantity
   end
 
