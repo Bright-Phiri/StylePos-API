@@ -11,6 +11,8 @@ Documentation:
   Enabled: false
 Style/RedundantSelf:
   Enabled: false
+Style/SymbolProc:
+  Enabled: false
 Layout/EndOfLine:
    Enabled: False
 Lint/MissingSuper:

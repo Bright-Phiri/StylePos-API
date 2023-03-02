@@ -12,10 +12,10 @@ Rails.application.routes.draw do
       end
       resources :dashboard, only: :index
       resources :inventory_levels, only: [:index, :destroy]
-      resources :orders, only: [:index, :show]
+      resources :orders, only: [:index, :show, :destroy]
       resources :customers
       resources :employees do
-        resources :orders, except: [:index, :show] do
+        resources :orders, except: [:index, :show, :destory] do
           resources :line_items, only: [:create, :destroy]
           post 'set_total_price', action: :set_total_price, controller: 'line_items'
         end

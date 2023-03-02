@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::API
-  before_action :require_login
+  # before_action :require_login
   include ExceptionHandler
 
   def encode_token(payload)

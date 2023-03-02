@@ -26,6 +26,12 @@ class Api::V1::OrdersController < ApplicationController
     end
   end
 
+  def destroy
+    order = Order.find(params[:id])
+    order.destroy
+    head :no_content
+  end
+
   private
 
   def set_order

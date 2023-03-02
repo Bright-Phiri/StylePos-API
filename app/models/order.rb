@@ -7,7 +7,7 @@ class Order < ApplicationRecord
   scope :monthly_revenue, -> { where(created_at: Date.current.beginning_of_month..Date.current.end_of_month) }
   scope :statistics, -> { created_in(Date.current.year).select(:id, :created_at, 'COUNT(id)').group(:id) }
   scope :created_in, ->(year) { where('extract(year from created_at) = ?', year) if year.present? }
-  has_many :line_items
+  has_many :line_items, dependent: :destroy
   validates_associated :line_items
   belongs_to :employee
 
