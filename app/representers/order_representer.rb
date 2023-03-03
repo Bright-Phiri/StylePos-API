@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OrdersRepresenter
+class OrderRepresenter
   def initialize(order)
     @order = order
   end
