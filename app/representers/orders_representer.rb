@@ -11,7 +11,10 @@ class OrdersRepresenter
         id: order.id,
         processed_by: order.processed_by,
         transaction_date: order.created_at,
-        total: order.total
+        total: order.total,
+        sub_total: order.total - order.total_vat,
+        vat: order.total_vat,
+        items_count: order.total_items
       }
     end
   end
