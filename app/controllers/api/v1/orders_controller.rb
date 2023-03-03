@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::OrdersController < ApplicationController
-  before_action :set_line_item, only: [:set_total_price]
+  before_action :set_order, only: :show
   def index
     orders = Order.preload(:employee).all
     render json: OrdersRepresenter.new(orders).as_json
@@ -18,11 +18,10 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def show
-    order = Order.preload(:line_items).find(params[:id])
-    if order.line_items.size.zero?
+    if @order.line_items.size.zero?
       render json: { error: 'Order summary not found' }, status: :not_found
     else
-      render json: OrderRepresenter.new(order).as_json, status: :ok
+      render json: OrderRepresenter.new(@order).as_json, status: :ok
     end
   end
 
@@ -35,6 +34,6 @@ class Api::V1::OrdersController < ApplicationController
   private
 
   def set_order
-    @order = Order.find(params[:id])
+    @order = Order.preload(:line_items).find(params[:id])
   end
 end
