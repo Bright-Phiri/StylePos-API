@@ -22,7 +22,9 @@ class Api::V1::OrdersController < ApplicationController
     if order.line_items.size.zero?
       render json: { error: 'Order summary not found' }, status: :not_found
     else
-      render json: LineItemsRepresenter.new(order.line_items).as_json, status: :ok
+      sub_total = order.total - order.total_vat
+      items_count = order.total_items
+      render json: { vat: order.total_vat, order_total: order.total, sub_total:, items_count:, line_items: LineItemsRepresenter.new(order.line_items).as_json }, status: :ok
     end
   end
 
