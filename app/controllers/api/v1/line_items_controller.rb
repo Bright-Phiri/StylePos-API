@@ -19,9 +19,7 @@ class Api::V1::LineItemsController < ApplicationController
     order = Order.preload(:line_items).find(params[:order_id])
     line_item = order.line_items.find(params[:id])
     line_item.destroy!
-    sub_total = order.total - order.total_vat
-    items_count = order.total_items
-    render json: { vat: order.total_vat, order_total: order.total, sub_total:, items_count:, line_items: LineItemsRepresenter.new(order.line_items.reload).as_json }, status: :ok
+    render json: OrderRepresenter.new(order).as_json, status: :created
   end
 
   private
