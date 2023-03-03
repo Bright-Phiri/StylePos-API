@@ -21,6 +21,10 @@ class Order < ApplicationRecord
     line_items.sum(:vat)
   end
 
+  def total_items
+    line_items.sum(:quantity)
+  end
+
   def created_at
     attributes['created_at'].strftime('%Y-%m-%d %H:%M:%S')
   end

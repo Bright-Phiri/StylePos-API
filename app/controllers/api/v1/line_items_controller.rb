@@ -12,7 +12,8 @@ class Api::V1::LineItemsController < ApplicationController
       render json: line_item.errors.full_messages, status: :unprocessable_entity
     else
       sub_total = order.total - order.total_vat
-      render json: { vat: order.total_vat, order_total: order.total, sub_total:, line_items: LineItemsRepresenter.new(order.line_items).as_json }, status: :created
+      items_count = order.total_items
+      render json: { vat: order.total_vat, order_total: order.total, sub_total:, items_count:, line_items: LineItemsRepresenter.new(order.line_items).as_json }, status: :created
     end
   end
 
@@ -21,7 +22,8 @@ class Api::V1::LineItemsController < ApplicationController
     line_item = order.line_items.find(params[:id])
     line_item.destroy!
     sub_total = order.total - order.total_vat
-    render json: { vat: order.total_vat, order_total: order.total, sub_total:, line_items: LineItemsRepresenter.new(order.line_items.reload).as_json }, status: :ok
+    items_count = order.total_items
+    render json: { vat: order.total_vat, order_total: order.total, sub_total:, items_count:, line_items: LineItemsRepresenter.new(order.line_items.reload).as_json }, status: :ok
   end
 
   private
