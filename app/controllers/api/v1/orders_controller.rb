@@ -18,13 +18,11 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def show
-    order = Order.find(params[:id])
+    order = Order.preload(:line_items).find(params[:id])
     if order.line_items.size.zero?
       render json: { error: 'Order summary not found' }, status: :not_found
     else
-      sub_total = order.total - order.total_vat
-      items_count = order.total_items
-      render json: { vat: order.total_vat, order_total: order.total, sub_total:, items_count:, line_items: LineItemsRepresenter.new(order.line_items).as_json }, status: :ok
+      render json: OrderRepresenter.new(order).as_json, status: :ok
     end
   end
 
