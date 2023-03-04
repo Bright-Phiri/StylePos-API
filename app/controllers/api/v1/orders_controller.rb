@@ -18,11 +18,7 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def show
-    if @order.line_items.size.zero?
-      render json: { error: 'Order summary not found' }, status: :not_found
-    else
-      render json: OrderRepresenter.new(@order).as_json, status: :ok
-    end
+    render json: OrderRepresenter.new(@order).as_json, status: :ok
   end
 
   def destroy
