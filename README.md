@@ -1,4 +1,4 @@
-ART API
+Clothing-Retail-Stores-API
 ===========================
 ## Requirements
 The following are required to run the Clothing Retail Stores API:
