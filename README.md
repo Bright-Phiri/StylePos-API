@@ -1,24 +1,38 @@
-# README
+Clothing-Retail-Stores-API
+===========================
+## Requirements
+The following are required to run the Clothing Retail Stores API:
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+- Ruby 2.7+
+- Rails 7.0+
 
-Things you may want to cover:
+## Getting Started
 
-* Ruby version
+1. Clone the repo
 
-* System dependencies
+   ```
+   $ git clone https://github.com/Bright-Phiri/Clothing-Retail-Stores-API.git
+   $ cd Clothing-Retail-Stores-API
+   ```
 
-* Configuration
+2. Install dependencies
 
-* Database creation
+   ```
+   $ bundle install
+   ```
+3. Run migrations:
 
-* Database initialization
+   ```
+   $ bin/rails db:migrate
+   ```
+   
+4. Running the API
 
-* How to run the test suite
+   ```
+   $ bin/rails server
+   ```
+ ## Contributors 
+ - [Bright](https://www.github.com/Bright-Phiri) - creator and maintainer
 
-* Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
 
-* ...
