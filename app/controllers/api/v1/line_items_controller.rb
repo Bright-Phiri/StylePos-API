@@ -15,6 +15,19 @@ class Api::V1::LineItemsController < ApplicationController
     end
   end
 
+  def update
+    order = Order.find(params[:order_id])
+    line_item = order.line_items.find(params[:id])
+    raise ExceptionHandler::InventoryLevelError, 'Not enough inventory' unless line_item.item.enough_inventory?(params[:line_item][:quantity].to_i)
+
+    vat = LineItem.calculate_vat(line_item.item.price, params[:line_item][:quantity].to_i)
+    if line_item.update(price: line_item.item.price + vat, quantity: params[:line_item][:quantity], vat:, total: params[:line_item][:quantity].to_i * (line_item.item.price + vat))
+      render json: OrderRepresenter.new(order).as_json, status: :ok
+    else
+      render json: line_item.errors.full_messages, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     order = Order.preload(:line_items).find(params[:order_id])
     line_item = order.line_items.find(params[:id])
@@ -25,6 +38,6 @@ class Api::V1::LineItemsController < ApplicationController
   private
 
   def line_item_params
-    params.require(:line_item).permit(:item_id, :quantity, :price)
+    params.require(:line_item).permit(:item_id, :order_id, :quantity, :price)
   end
 end

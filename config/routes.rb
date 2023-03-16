@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       resources :customers
       resources :employees do
         resources :orders, except: [:index, :show, :destory] do
-          resources :line_items, only: [:create, :destroy]
+          resources :line_items, only: [:create, :update, :destroy]
           post 'set_total_price', action: :set_total_price, controller: 'line_items'
         end
       end
