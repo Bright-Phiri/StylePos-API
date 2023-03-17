@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 class LineItem < ApplicationRecord
   belongs_to :item
   belongs_to :order
@@ -9,8 +8,9 @@ class LineItem < ApplicationRecord
   before_destroy :update_inventory_and_total
 
   def self.calculate_vat(pre_vat_price)
-    vat = pre_vat_price * (16.5 / 100.0)
-    vat.round(2)
+    vat = pre_vat_price * 0.165
+    formated_vat = sprintf("%20.8g", vat)
+    formated_vat.to_f.round(2)
   end
 
   private

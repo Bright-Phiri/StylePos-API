@@ -28,6 +28,8 @@ ClassAndModuleChildren:
   Enabled: False
 Style/WordArray:
   Enabled: False
+Style/FormatString:
+  Enabled: False
 Style/SymbolArray:
   Enabled: False
 Metrics/CyclomaticComplexity: 
