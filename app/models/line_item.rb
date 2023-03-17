@@ -4,16 +4,20 @@ class LineItem < ApplicationRecord
   belongs_to :item
   belongs_to :order
   validates :quantity, numericality: { only_integer: true }
+  VAT_RATE = 16.5
 
   after_save :update_inventory_level_and_total
   before_destroy :update_inventory_and_total
 
   def self.calculate_vat(pre_vat_price, requested_quantity)
-    vat_rate = 16.5
-    total_price = pre_vat_price * requested_quantity * (1 + (vat_rate / 100))
+    total_price = pre_vat_price * requested_quantity * (1 + (VAT_RATE / 100))
     vat_amount = total_price - (pre_vat_price * requested_quantity)
     formated_vat = sprintf("%20.8g", vat_amount)
     formated_vat.to_f.round(2)
+  end
+
+  def self.calculate_total(pre_vat_price, requested_quantity)
+    pre_vat_price * requested_quantity * (1 + (VAT_RATE / 100))
   end
 
   private
