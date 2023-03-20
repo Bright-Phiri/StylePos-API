@@ -17,9 +17,9 @@ class Api::V1::LineItemsController < ApplicationController
   end
 
   def update
+    @line_item.destroy! unless params[:line_item][:quantity].to_i <= 0
     raise ExceptionHandler::InventoryLevelError, 'Not enough inventory' unless @line_item.item.enough_inventory?(params[:line_item][:quantity].to_i)
 
-    @line_item.destroy!
     vat = LineItem.calculate_vat(@line_item.item.price, params[:line_item][:quantity].to_i)
     line_item = @order.line_items.create(line_item_params.merge(item_id: @line_item.item.id, price: @line_item.item.price + vat, vat:, total: LineItem.calculate_total(@line_item.item.price, params[:line_item][:quantity].to_i)))
     if line_item.new_record?
