@@ -3,7 +3,7 @@
 class LineItem < ApplicationRecord
   belongs_to :item
   belongs_to :order
-  validates :quantity, numericality: { only_integer: true }
+  validates :quantity, numericality: { only_integer: true, greater_than: 0 }
   VAT_RATE = 16.5
 
   after_save :update_inventory_level_and_total
