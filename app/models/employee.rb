@@ -15,4 +15,27 @@ class Employee < ApplicationRecord
       validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: 'is invalid' }
     end
   end
+
+  def generate_password_token!
+    self.reset_password_token = generate_token
+    self.reset_password_sent_at = Time.now.utc
+    save!(validate: false)
+  end
+
+  def password_token_valid?
+    (reset_password_sent_at + 2.hours) > Time.now.utc
+  end
+
+  def reset_password!(password, password_confirmation)
+    self.reset_password_token = nil
+    self.password = password
+    self.password_confirmation = password_confirmation
+    save!
+  end
+
+  private
+
+  def generate_token
+    SecureRandom.hex(10)
+  end
 end
