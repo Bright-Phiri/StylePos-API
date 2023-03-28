@@ -20,6 +20,7 @@ Rails.application.routes.draw do
         end
       end
       post 'login', action: :login, controller: 'authentication'
+      post 'createaccount', action: :set_manager, controller: 'employees'
     end
   end
 end
