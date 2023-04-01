@@ -4,7 +4,7 @@ class Api::V1::EmployeesController < ApplicationController
   skip_before_action :require_login, only: :set_manager
   before_action :set_employee, only: [:update, :show, :destroy]
   def index
-    employees = Employee.all
+    employees = Employee.where.not(job_title: 'Store Manager')
     render json: employees
   end
 
@@ -25,7 +25,7 @@ class Api::V1::EmployeesController < ApplicationController
     if Employee.exists?
       render json: { message: 'Access Denied: You do not have the required privileges to complete this action.' }, status: :forbidden
     else
-      user = Employee.new(employee_params.merge(job_title: 'Store Manager'))
+      user = Employee.new(employee_params.merge(job_title: 'Store Manager', password: params[:password], password_confirmation: params[:password_confirmation]))
       if user.save
         render json: user, status: :created
       else
