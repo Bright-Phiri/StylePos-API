@@ -11,6 +11,7 @@ class LineItemsRepresenter
         id: line_item.id,
         item: line_item.item.name,
         quantity: line_item.quantity,
+        discount: line_item.discount,
         price: line_item.price,
         vat: line_item.vat,
         total: line_item.total,

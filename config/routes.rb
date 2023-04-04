@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       resources :employees do
         resources :orders, except: [:index, :show, :destory] do
           resources :line_items, only: [:create, :update, :destroy]
+          put 'apply_discount/:id', action: :apply_discount, controller: 'line_items'
         end
       end
       post 'login', action: :login, controller: 'authentication'

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::LineItemsController < ApplicationController
-  before_action :set_line_item, only: [:update, :destroy]
+  before_action :set_line_item, only: [:update, :destroy, :apply_discount]
   def create
     order = Order.find(params[:order_id])
     item = Item.preload(:inventory_level).find(params[:line_item][:item_id])
@@ -19,13 +19,20 @@ class Api::V1::LineItemsController < ApplicationController
   end
 
   def apply_discount
-  
+    @line_item.discount = params[:discount].to_f
+    @line_item.total = @line_item.total - params[:discount].to_f
+    if @line_item.save
+      @order.update(total: (@order.total - @line_item.discount))
+      render json: OrderRepresenter.new(@order).as_json, status: :ok
+    else
+      render json: @line_item.errors.full_messages, status: :unprocessable_entity
+    end
   end
 
   private
 
   def line_item_params
-    params.require(:line_item).permit(:item_id, :order_id, :quantity, :price)
+    params.require(:line_item).permit(:item_id, :order_id, :quantity, :discount)
   end
 
   def set_line_item
