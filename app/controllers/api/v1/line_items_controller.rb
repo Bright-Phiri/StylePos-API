@@ -18,6 +18,10 @@ class Api::V1::LineItemsController < ApplicationController
     render json: OrderRepresenter.new(@order).as_json, status: :ok
   end
 
+  def apply_discount
+  
+  end
+
   private
 
   def line_item_params
