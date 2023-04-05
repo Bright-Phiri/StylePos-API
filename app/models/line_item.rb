@@ -4,10 +4,13 @@ class LineItem < ApplicationRecord
   belongs_to :item
   belongs_to :order
   validates :quantity, numericality: { only_integer: true, greater_than: 0 }
+  validates :discount, numericality: { less_than_or_equal_to: :total, message: 'cannot be greater than total' }
   VAT_RATE = 16.5
 
-  after_save :update_inventory_level_and_total
+  after_commit :update_inventory_level_and_total, on: :create
   before_destroy :update_inventory_and_total
+
+  before_validation { self.discount = 0 if self.discount.nil? }
 
   def self.calculate_vat(pre_vat_price, requested_quantity)
     total_price = pre_vat_price * requested_quantity * (1 + (VAT_RATE / 100))

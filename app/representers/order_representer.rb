@@ -13,6 +13,7 @@ class OrderRepresenter
       total: order.total,
       sub_total: order.total - order.total_vat,
       vat: order.total_vat,
+      discount: order.total_discount,
       items_count: order.total_items,
       line_items: LineItemsRepresenter.new(order.line_items.reload).as_json
     }

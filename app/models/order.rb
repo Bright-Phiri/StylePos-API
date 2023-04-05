@@ -21,6 +21,10 @@ class Order < ApplicationRecord
     line_items.sum(:vat)
   end
 
+  def total_discount
+    line_items.sum(:discount)
+  end
+
   def total_items
     line_items.sum(:quantity)
   end
