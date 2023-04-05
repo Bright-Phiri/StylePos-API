@@ -19,9 +19,7 @@ class Api::V1::LineItemsController < ApplicationController
   end
 
   def apply_discount
-    @line_item.discount = params[:discount].to_f
-    @line_item.total = @line_item.total - params[:discount].to_f
-    if @line_item.save
+    if @line_item.update(discount: params[:discount].to_f, total: @line_item.total - params[:discount].to_f)
       @order.update(total: (@order.total - @line_item.discount))
       render json: OrderRepresenter.new(@order).as_json, status: :ok
     else

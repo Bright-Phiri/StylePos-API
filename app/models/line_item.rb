@@ -4,7 +4,7 @@ class LineItem < ApplicationRecord
   belongs_to :item
   belongs_to :order
   validates :quantity, numericality: { only_integer: true, greater_than: 0 }
-  validates :discount, numericality: { greater_than_or_equal_to: 0, less_than: :total, message: 'cannot be greater than total' }
+  validates :discount, numericality: { less_than_or_equal_to: :total, message: 'cannot be greater than total' }
   VAT_RATE = 16.5
 
   after_commit :update_inventory_level_and_total, on: :create
