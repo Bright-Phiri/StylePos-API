@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class LineItem < ApplicationRecord
+  default_scope { order(:created_at).reverse_order }
   belongs_to :item
   belongs_to :order
   validates :quantity, numericality: { only_integer: true, greater_than: 0 }
