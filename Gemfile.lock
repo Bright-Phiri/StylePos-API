@@ -73,6 +73,7 @@ GEM
     builder (3.2.4)
     concurrent-ruby (1.1.10)
     crass (1.0.6)
+    csv (3.2.2)
     date (3.3.3)
     debug (1.7.1)
       irb (>= 1.5.0)
@@ -186,6 +187,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    will_paginate (3.1.8)
     zeitwerk (2.6.6)
 
 PLATFORMS
@@ -194,6 +196,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap
+  csv (~> 3.0)
   debug
   jwt
   pg (~> 1.1)
@@ -204,6 +207,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   tzinfo-data
+  will_paginate (~> 3.1.1)
 
 RUBY VERSION
    ruby 3.1.2p20

@@ -3,8 +3,8 @@
 class Api::V1::InventoryLevelsController < ApplicationController
   before_action :set_inventory_level, only: [:update, :show]
   def index
-    inventory_levels = InventoryLevel.preload(:item).all
-    render json: InventoriesRepresenter.new(inventory_levels).as_json
+    inventory_levels = InventoryLevel.preload(:item).paginate(page: params[:page], per_page: params[:per_page])
+    render json: { inventory_levels: InventoriesRepresenter.new(inventory_levels).as_json, total: inventory_levels.total_entries }
   end
 
   def show
