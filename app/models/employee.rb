@@ -3,10 +3,9 @@
 class Employee < ApplicationRecord
   VALID_ROLES = ['Cashier', 'Store Manager'].freeze
   has_many :orders
-  validates_associated :orders
   has_secure_password
+  validates_associated :orders
   validates :first_name, :last_name, presence: true, unless: :user_role_manager?
-  validates :first_name, :last_name, presence: true, if: :user_role_manager?, on: :update
   validates :password, length: { in: 6..8 }
   with_options presence: true do
     validates :user_name, uniqueness: true, format: { without: /\s/, message: 'must contain no spaces' }
@@ -15,6 +14,10 @@ class Employee < ApplicationRecord
       validates :phone_number, phone_number: true, allow_blank: true
       validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: 'is invalid' }
     end
+  end
+
+  with_options if: :user_role_manager? do |manager|
+    manager.validates :first_name, :last_name, presence: true, on: :update
   end
 
   def user_role_manager?
