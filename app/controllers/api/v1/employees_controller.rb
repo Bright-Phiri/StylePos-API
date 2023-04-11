@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::EmployeesController < ApplicationController
-  # skip_before_action :require_login, only: :set_manager
+  skip_before_action :require_login, only: :set_manager
   before_action :set_employee, only: [:update, :show, :destroy]
   def index
     employees = Employee.where.not(job_title: 'Store Manager')

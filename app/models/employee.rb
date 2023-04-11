@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Employee < ApplicationRecord
-  has_secure_password
   VALID_ROLES = ['Cashier', 'Store Manager'].freeze
   has_many :orders
   has_secure_password
