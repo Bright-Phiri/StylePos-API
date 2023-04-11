@@ -38,8 +38,9 @@ gem "bootsnap", require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem "rack-cors"
-gem 'csv', '~> 3.0'
 gem 'will_paginate', '~> 3.1.1'
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
