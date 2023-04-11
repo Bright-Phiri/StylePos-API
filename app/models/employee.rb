@@ -6,6 +6,7 @@ class Employee < ApplicationRecord
   validates_associated :orders
   has_secure_password
   validates :first_name, :last_name, presence: true, unless: :user_role_manager?
+  validates :first_name, :last_name, presence: true, if: :user_role_manager?, on: :update
   validates :password, length: { in: 6..8 }
   with_options presence: true do
     validates :user_name, uniqueness: true, format: { without: /\s/, message: 'must contain no spaces' }
