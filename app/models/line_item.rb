@@ -9,6 +9,7 @@ class LineItem < ApplicationRecord
   VAT_RATE = 16.5
 
   after_commit :update_inventory_level_and_total, on: :create
+  after_commit { DashboardBroadcastJob.perform_later('line_items') }
   before_destroy :update_inventory_and_total
 
   before_validation { self.discount = 0 if self.discount.nil? }
