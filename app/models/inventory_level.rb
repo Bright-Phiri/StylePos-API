@@ -6,6 +6,7 @@ class InventoryLevel < ApplicationRecord
   validates :quantity, :reorder_level, numericality: { greater_than: 0, only_integer: true }
   validates :quantity, comparison: { greater_than: :reorder_level, message: 'must be greater than reorder level' }, on: :create
   after_save :check_inventory_level
+  after_commit { DashboardBroadcastJob.perform_later('inventory') }
 
   def check_inventory_level
     ItemMailer.with(item: self.item).reorder_email.deliver_later if self.item.inventory_level.present? && self.item.inventory <= self.item.inventory_level.reorder_level
