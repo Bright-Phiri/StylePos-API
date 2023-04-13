@@ -13,7 +13,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def create
-    employee = Employee.new(employee_params)
+    employee = Employee.new(employee_params.merge(password: params[:password], password_confirmation: params[:password_confirmation]))
     if employee.save
       render json: employee, status: :created
     else
@@ -25,7 +25,7 @@ class Api::V1::EmployeesController < ApplicationController
     if Employee.exists?
       render json: { message: 'Access Denied: You do not have the required privileges to complete this action.' }, status: :forbidden
     else
-      user = Employee.new(employee_params.merge(job_title: 'Store Manager'))
+      user = Employee.new(employee_params.merge(job_title: 'Store Manager', password: params[:password], password_confirmation: params[:password_confirmation]))
       if user.save
         render json: user, status: :created
       else
@@ -35,7 +35,7 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def update
-    if @employee.update(employee_params)
+    if @employee.update(employee_params.merge(password: params[:password], password_confirmation: params[:password_confirmation]))
       render json: @employee, status: :ok
     else
       render json: @employee.errors.full_messages, status: :unprocessable_entity

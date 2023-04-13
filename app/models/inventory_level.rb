@@ -14,4 +14,10 @@ class InventoryLevel < ApplicationRecord
   def item_name
     item.name
   end
+
+  private
+
+  def check_inventory_level
+    ItemMailer.reorder_email(self.item).deliver_later if self.item.inventory_level.present? && self.item.inventory <= self.item.inventory_level.reorder_level
+  end
 end

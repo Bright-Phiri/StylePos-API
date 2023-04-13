@@ -5,8 +5,7 @@ require 'csv'
 file_path = Rails.root.join('data.csv')
 csv_data = File.read(file_path)
 csv = CSV.parse(csv_data, headers: false)
-
-9000.times do
+20.times do
   csv.each do |row|
     item = Item.new do |i|
       i.name = row[0]
@@ -17,3 +16,12 @@ csv = CSV.parse(csv_data, headers: false)
     item.save!
   end
 end
+
+# 1.times do
+#   items = Item.find_each(batch_size: 50) do |item|
+#     inventory_level = item.create_inventory_level(quantity: 10, reorder_level: 3, supplier: 'Test')
+#     if inventory_level.new_record?
+# #       puts inventory_level.errors.full_messages
+# #     end
+# #   end
+# end
