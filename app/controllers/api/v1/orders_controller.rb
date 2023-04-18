@@ -3,7 +3,8 @@
 class Api::V1::OrdersController < ApplicationController
   before_action :set_order, only: :show
   def index
-    orders = Order.preload(:employee).paginate(page: params[:page], per_page: params[:per_page])
+    orders = Order.preload(:employee).search(params[:search])
+    orders = orders.paginate(page: params[:page], per_page: params[:per_page])
     render json: { orders: OrdersRepresenter.new(orders).as_json, total: orders.total_entries }
   end
 
