@@ -10,6 +10,7 @@ class ItemRepresenter
       id: item.id,
       name: item.name,
       price: item.price,
+      selling_price: item.selling_price,
       size: item.size,
       color: item.color,
       stock_level: item.stock_level,

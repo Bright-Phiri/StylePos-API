@@ -13,7 +13,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    item = Item.new(item_params)
+    item = Item.new(item_params.merge(selling_price: params[:price].to_f + LineItem.calculate_vat(params[:price].to_f, 1)))
     if item.save
       render json: ItemRepresenter.new(item).as_json, status: :created
     else
@@ -22,7 +22,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update
-    if @item.update(item_params)
+    if @item.update(item_params.merge(selling_price: params[:price].to_f + LineItem.calculate_vat(params[:price].to_f, 1)))
       render json: ItemRepresenter.new(@item).as_json, status: :ok
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
