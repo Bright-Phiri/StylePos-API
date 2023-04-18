@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class InventoryLevel < ApplicationRecord
+  scope :search, ->(query) { joins(:item).where("items.name ILIKE ?", "%#{query}%") if query.present? }
   belongs_to :item
   validates :supplier, presence: true, allow_blank: true
   validates :quantity, :reorder_level, numericality: { greater_than: 0, only_integer: true }
