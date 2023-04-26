@@ -13,7 +13,9 @@ Rails.application.routes.draw do
       end
       resources :dashboard, only: :index
       resources :inventory_levels, only: [:index, :destroy]
-      resources :orders, only: [:index, :show, :destroy]
+      resources :orders, only: [:index, :show, :destroy] do
+        delete 'return_item/:line_item_id', action: :return_item, controller: 'orders'
+      end
       resources :customers
       resources :employees do
         resources :orders, except: [:index, :show, :destory] do
