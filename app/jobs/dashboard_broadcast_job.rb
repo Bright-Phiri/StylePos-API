@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DashboardBroadcastJob < ApplicationJob
-  queue_as :default
+  queue_as :dashboard_broadcast
 
   def perform(type)
     data = {
