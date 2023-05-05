@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
     namespace :v1 do
-      resources :items do
+      resources :items, except: :show do
         resources :inventory_levels, except: [:index, :destory]
       end
       resources :dashboard, only: :index
@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       resources :orders, only: [:index, :show, :destroy] do
         delete 'return_item/:line_item_id', action: :return_item, controller: 'orders'
       end
+      get 'find_item/:barcode', action: :find_item, controller: 'items'
       resources :customers
       resources :employees do
         resources :orders, except: [:index, :show, :destory] do

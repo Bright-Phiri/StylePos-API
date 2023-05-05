@@ -67,6 +67,7 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
     ast (2.4.2)
+    barby (0.6.8)
     bcrypt (3.1.18)
     bootsnap (1.15.0)
       msgpack (~> 1.2)
@@ -199,6 +200,7 @@ PLATFORMS
   x64-mingw-ucrt
 
 DEPENDENCIES
+  barby
   bcrypt (~> 3.1.7)
   bootsnap
   debug

@@ -9,6 +9,7 @@ class LineItemsRepresenter
     line_items.map do |line_item|
       {
         id: line_item.id,
+        barcode: line_item.item.barcode,
         item: line_item.item.name,
         quantity: line_item.quantity,
         discount: line_item.discount,

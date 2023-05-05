@@ -8,6 +8,7 @@ class ItemRepresenter
   def as_json
     {
       id: item.id,
+      barcode: item.barcode,
       name: item.name,
       price: item.price,
       selling_price: item.selling_price,

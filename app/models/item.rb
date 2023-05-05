@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'barby'
+require 'barby/barcode/code_128'
+
 class Item < ApplicationRecord
   scope :best_selling, -> { joins(:line_items).group(:id).order("SUM(line_items.quantity) DESC") }
   scope :slow_moving, -> { joins(:line_items).group(:id).order("SUM(line_items.quantity) ASC") }
@@ -35,5 +38,15 @@ class Item < ApplicationRecord
     else
       'In stock'
     end
+  end
+
+  def self.generate_barcode(name, color, size)
+    gtin = name.byteslice(0, 4).unpack('U*').join.to_i.to_s.rjust(4, '0')
+    color = color.byteslice(0, 2).unpack('U*').join.to_i.to_s.rjust(2, '0')
+    size = size.byteslice(0, 2).unpack('U*').join.to_i.to_s.rjust(2, '0')
+    data = "#{gtin}#{color}#{size}"
+    barcode = Barby::Code128B.new(data)
+    barcode_data = barcode.data.byteslice(1..-1)
+    "#{barcode_data[0..3]}#{barcode_data[4..5]}#{barcode_data[6..7]}"
   end
 end
