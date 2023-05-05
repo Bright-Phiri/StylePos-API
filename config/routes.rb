@@ -29,8 +29,8 @@ Rails.application.routes.draw do
       post 'login', action: :login, controller: 'authentication'
       post 'register', action: :set_manager, controller: 'employees'
       put 'update_password/:id', action: :change, controller: 'passwords'
-      post 'forgot_password/:id', action: :forgot, controller: 'passwords'
-      post 'reset_password/:id', action: :reset, controller: 'passwords'
+      post 'forgot_password', action: :forgot, controller: 'passwords'
+      post 'reset_password', action: :reset, controller: 'passwords'
     end
   end
 end
