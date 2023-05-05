@@ -8,7 +8,7 @@ class Item < ApplicationRecord
   scope :slow_moving, -> { joins(:line_items).group(:id).order("SUM(line_items.quantity) ASC") }
   scope :out_of_stock, -> { joins(:inventory_level).where('inventory_levels.quantity = ?', 0) }
   scope :in_stock, -> { joins(:inventory_level).where('inventory_levels.quantity > ?', 0) }
-  scope :search, ->(query) { where("name ILIKE :query OR size ILIKE :query OR color ILIKE :query OR CAST(price AS VARCHAR) ILIKE :query", query: "%#{query}%") if query.present? }
+  scope :search, ->(query) { where("name ILIKE :query OR barcode ILIKE :query OR size ILIKE :query OR color ILIKE :query OR CAST(price AS VARCHAR) ILIKE :query", query: "%#{query}%") if query.present? }
 
   has_one :inventory_level, inverse_of: :item, dependent: :destroy
   has_many :line_items
