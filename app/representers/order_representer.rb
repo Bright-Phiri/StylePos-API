@@ -9,7 +9,7 @@ class OrderRepresenter
     {
       id: order.id,
       processed_by: order.processed_by,
-      transaction_date: order.created_at,
+      transaction_date: order.formatted_created_at,
       total: order.total,
       sub_total: order.total - order.total_vat,
       vat: order.total_vat,

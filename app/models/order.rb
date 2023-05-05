@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Order < ApplicationRecord
+  include CreatedAtFormatting
   scope :of_day, -> { where(created_at: Date.today.beginning_of_day..Date.today.end_of_day) }
   scope :daily_revenue, -> { where(created_at: Date.today.beginning_of_day..Date.today.end_of_day) }
   scope :weekly_revenue, -> { where(created_at: Date.current.beginning_of_week..Date.current.end_of_week) }
@@ -9,6 +10,7 @@ class Order < ApplicationRecord
   scope :created_in, ->(year) { where('extract(year from created_at) = ?', year) if year.present? }
   scope :search, ->(query) { joins(:employee).where("employees.first_name ILIKE :query OR employees.last_name ILIKE :query OR CAST(orders.created_at AS TEXT) ILIKE :query OR CAST(total AS VARCHAR) ILIKE :query", query: "%#{query}%") if query.present? }
   has_many :line_items, inverse_of: :order, dependent: :destroy
+  has_many :returns
   belongs_to :employee
 
   after_validation :initialize_order, on: :create
@@ -28,10 +30,6 @@ class Order < ApplicationRecord
 
   def total_items
     line_items.sum(:quantity)
-  end
-
-  def created_at
-    attributes['created_at'].strftime('%Y-%m-%d %H:%M:%S')
   end
 
   private

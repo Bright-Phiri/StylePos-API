@@ -27,13 +27,6 @@ class Api::V1::OrdersController < ApplicationController
     head :no_content
   end
 
-  def return_item
-    order = Order.preload(:line_items).find(params[:order_id])
-    line_item = order.line_items.find(params[:line_item_id])
-    line_item.destroy!
-    render json: OrderRepresenter.new(order).as_json, status: :ok
-  end
-
   private
 
   def set_order

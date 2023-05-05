@@ -14,8 +14,9 @@ Rails.application.routes.draw do
       end
       resources :dashboard, only: :index
       resources :inventory_levels, only: [:index, :destroy]
+      resources :returns, only: :index
       resources :orders, only: [:index, :show, :destroy] do
-        delete 'return_item/:line_item_id', action: :return_item, controller: 'orders'
+        post 'return_item/:line_item_id', action: :return_item, controller: 'returns'
       end
       get 'find_item/:barcode', action: :find_item, controller: 'items'
       resources :customers
