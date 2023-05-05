@@ -20,11 +20,11 @@ class Api::V1::PasswordsController < ApplicationController
 
     user.generate_password_token!
     UserMailer.with(user:).password_reset.deliver_later
-    render json: { message: 'A reset password link has been sent to your email' }, status: :Ok
+    render json: { message: 'A reset password link has been sent to your email' }, status: :ok
   end
 
   def reset
-    user = Employee.find_by(reset_password_token: token)
+    user = Employee.find_by(reset_password_token: params[:token])
     if user.present? && user.password_token_valid?
       if user.reset_password!(params[:password], params[:password_confirmation])
         render json: { message: 'Password successfully changed' }, status: :ok
