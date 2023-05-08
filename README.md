@@ -31,10 +31,13 @@ The following are required to run the Clothing Retail Stores API:
    ```
    $ bin/rails server
    ```
-   
-    ```
+5. Start the Sidekiq server
+
+   ```
    $ bin/bundle exec sidekiq
    ```
+ 
+   
 
  ## Contributors 
  - [Bright](https://www.github.com/Bright-Phiri) - creator and maintainer
