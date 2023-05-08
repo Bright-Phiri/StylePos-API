@@ -42,8 +42,10 @@ class Item < ApplicationRecord
   end
 
   def self.generate_barcode(name, color, size)
-    gtin = name.byteslice(0, 4).unpack('U*').join.to_i.to_s.rjust(4, '0')
-    color = color.byteslice(0, 2).unpack('U*').join.to_i.to_s.rjust(2, '0')
+    item_name = name.split("").shuffle.join("")
+    item_color = color.split("").shuffle.join("")
+    gtin = item_name.byteslice(0, 4).unpack('U*').join.to_i.to_s.rjust(4, '0')
+    color = item_color.byteslice(0, 2).unpack('U*').join.to_i.to_s.rjust(2, '0')
     size = size.byteslice(0, 2).unpack('U*').join.to_i.to_s.rjust(2, '0')
     data = "#{gtin}#{color}#{size}"
     barcode = Barby::Code128B.new(data)
