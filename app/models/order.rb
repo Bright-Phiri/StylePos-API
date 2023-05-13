@@ -2,6 +2,7 @@
 
 class Order < ApplicationRecord
   include CreatedAtFormatting
+  default_scope { order(created_at: :desc) }
   scope :of_day, -> { where(created_at: Date.today.beginning_of_day..Date.today.end_of_day) }
   scope :daily_revenue, -> { where(created_at: Date.today.beginning_of_day..Date.today.end_of_day) }
   scope :weekly_revenue, -> { where(created_at: Date.current.beginning_of_week..Date.current.end_of_week) }
