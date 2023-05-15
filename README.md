@@ -36,6 +36,11 @@ The following are required to run the Clothing Retail Stores API:
    ```
    $ bin/bundle exec sidekiq
    ```
+6. Start the Redis server
+
+   ```
+   $ bin/redis-server
+   ```
  
    
 
