@@ -10,6 +10,6 @@ class DashboardChannel < ApplicationCable::Channel
   end
 
   on_subscribe do
-    DashboardBroadcastJob.perform_later('all')
+    DashboardBroadcastJob.perform_later('refresh_dashbaord')
   end
 end
