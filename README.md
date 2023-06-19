@@ -1,7 +1,7 @@
 Clothing-Retail-Stores-API
 ===========================
 ## Requirements
-The following are required to run the Clothing Retail Stores API:
+The following are required to run the Clothing Retail Stores API: 
 
 - Ruby 2.7+
 - Rails 7.0+
