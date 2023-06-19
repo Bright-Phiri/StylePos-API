@@ -20,6 +20,8 @@ class Employee < ApplicationRecord
     manager.validates :first_name, :last_name, presence: true, on: :update
   end
 
+  enum :status, [:active, :disabled], suffix: true, default: :active
+
   def user_role_manager?
     job_title == "Store Manager"
   end
