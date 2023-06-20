@@ -26,6 +26,8 @@ Rails.application.routes.draw do
           put 'apply_discount/:id', action: :apply_discount, controller: 'line_items'
         end
       end
+      post 'disable_user/:id', action: :disable_user, controller: 'employees'
+      post 'activate_user/:id', action: :activate_user, controller: 'employees'
       post 'login', action: :login, controller: 'authentication'
       post 'register', action: :set_manager, controller: 'employees'
       put 'update_password/:id', action: :change, controller: 'passwords'
