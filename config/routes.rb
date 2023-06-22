@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       end
       get 'find_item/:barcode', action: :find_item, controller: 'items'
       resources :customers
+      get 'filter_transactions', action: :find, controller: 'orders'
       resources :employees do
         resources :orders, except: [:index, :show, :destory] do
           resources :line_items, only: [:create, :update, :destroy]

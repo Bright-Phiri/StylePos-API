@@ -3,9 +3,11 @@
 class Api::V1::OrdersController < ApplicationController
   before_action :set_order, only: :show
   def index
-    orders = Order.preload(:employee).search(params[:search])
-    orders = orders.paginate(page: params[:page], per_page: params[:per_page])
-    render json: { orders: OrdersRepresenter.new(orders).as_json, total: orders.total_entries }
+    render_orders(search: params[:search])
+  end
+
+  def find
+    render_orders(filter: params[:selected_filter])
   end
 
   def create
@@ -31,5 +33,24 @@ class Api::V1::OrdersController < ApplicationController
 
   def set_order
     @order = Order.preload(:line_items).find(params[:id])
+  end
+
+  def render_orders(search: nil, filter: nil)
+    orders = search ? Order.preload(:employee).search(search) : filter_transactions(filter)
+    orders = orders.paginate(page: params[:page], per_page: params[:per_page])
+    render json: { orders: OrdersRepresenter.new(orders).as_json, total: orders.total_entries }
+  end
+
+  def filter_transactions(filter)
+    case filter
+    when 'today'
+      Order.of_day
+    when 'week'
+      Order.weekly_revenue
+    when 'month'
+      Order.monthly_revenue
+    else
+      raise ArgumentError, "Invalid filter: #{filter}"
+    end
   end
 end
