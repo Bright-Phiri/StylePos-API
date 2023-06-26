@@ -44,11 +44,13 @@ class Api::V1::OrdersController < ApplicationController
   def filter_transactions(filter)
     case filter
     when 'today'
-      Order.of_day
+      Order.preload(:employee).of_day
     when 'week'
-      Order.weekly_revenue
+      Order.preload(:employee).weekly_revenue
     when 'month'
-      Order.monthly_revenue
+      Order.preload(:employee).monthly_revenue
+    when 'all'
+      Order.preload(:employee)
     else
       raise ArgumentError, "Invalid filter: #{filter}"
     end
