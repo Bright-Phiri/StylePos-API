@@ -10,7 +10,7 @@ class LineItem < ApplicationRecord
 
   after_commit :update_inventory_level_and_total, on: :create
   after_commit { DashboardBroadcastJob.perform_later('line_items') }
-  before_destroy :update_inventory_and_total
+  before_destroy :update_inventory_and_total_on_destroy 
 
   before_validation { self.discount = 0 if self.discount.nil? }
 
@@ -34,7 +34,7 @@ class LineItem < ApplicationRecord
     end
   end
 
-  def update_inventory_and_total
+  def update_inventory_and_total_on_destroy
     ActiveRecord::Base.transaction do
       self.order.update!(total: (order.total - self.total))
       raise ExceptionHandler::InventoryLevelError, 'Failed to update inventory' unless self.item.inventory_level.update_attribute(:quantity, self.item.inventory + self.quantity)
