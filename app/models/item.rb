@@ -13,7 +13,7 @@ class Item < ApplicationRecord
   has_one :inventory_level, inverse_of: :item, dependent: :destroy
   has_many :line_items
   has_many :returns
-  belongs_to :category
+  belongs_to :category, counter_cache: true
   validates_associated :line_items
   validates :name, :size, :color, presence: true
   validates :price, numericality: { greater_than: 0 }
