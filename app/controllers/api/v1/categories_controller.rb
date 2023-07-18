@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 
 class Api::V1::CategoriesController < ApplicationController
-  before_action :set_category, only: [:update, :destory]
+  before_action :set_category, only: [:show_items, :update, :destory]
   def index
     categories = Category.all
     render json: categories
+  end
+
+  def show_items
+    if @category.items_count.zero?
+      render json: {}, status: :not_found
+    else
+      render json: @category.items, status: :ok
+    end
   end
 
   def create
