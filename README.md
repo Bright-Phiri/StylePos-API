@@ -24,8 +24,8 @@ The following are required to run the Clothing Retail Stores API:
 1. Clone the repo
 
    ```
-   $ git clone https://github.com/Bright-Phiri/Clothing-Retail-Stores-API.git
-   $ cd Clothing-Retail-Stores-API
+   $ git clone https://github.com/Bright-Phiri/StylePos-API.git
+   $ cd StylePos-API
    ```
 
 2. Install dependencies
