@@ -9,8 +9,10 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
     namespace :v1 do
-      resources :items do
-        resources :inventory_levels, except: [:index, :destory]
+      resources :categories do
+        resources :items do
+          resources :inventory_levels, except: [:index, :destory]
+        end
       end
       resources :dashboard, only: :index
       resources :inventory_levels, only: [:index, :destroy]
