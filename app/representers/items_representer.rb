@@ -16,7 +16,8 @@ class ItemsRepresenter
         size: item.size,
         color: item.color,
         stock_level: item.stock_level,
-        inventory_level: item.inventory
+        inventory_level: item.inventory,
+        category: item.category.name
       }
     end
   end

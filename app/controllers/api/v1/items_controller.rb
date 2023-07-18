@@ -4,7 +4,7 @@ class Api::V1::ItemsController < ApplicationController
   before_action :set_item, only: [:update, :destroy, :show]
   before_action :find_item, only: :find_item
   def index
-    items = Item.preload(:inventory_level).search(params[:search])
+    items = Item.preload(:inventory_level, :category).search(params[:search])
     items = items.paginate(page: params[:page], per_page: params[:per_page])
     render json: { items: ItemsRepresenter.new(items).as_json, total: items.total_entries }
   end
