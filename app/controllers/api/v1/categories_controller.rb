@@ -12,10 +12,12 @@ class Api::V1::CategoriesController < ApplicationController
   end
 
   def show_items
-    if @category.items_count.zero?
+    if @category.items_count.nil?
       render json: {}, status: :not_found
     else
-      render json: @category.items, status: :ok
+      @items = @category.items
+      @items = @items.paginate(page: params[:page], per_page: params[:per_page])
+      render json: @items, status: :ok
     end
   end
 
