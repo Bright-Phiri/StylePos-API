@@ -16,7 +16,8 @@ class ItemRepresenter
       color: item.color,
       stock_level: item.stock_level,
       inventory_level: item.inventory,
-      category: item.category.name
+      category_id: item.category.id,
+      category_name: item.category.name
     }
   end
 

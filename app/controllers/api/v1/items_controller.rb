@@ -19,7 +19,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    category = Category.find(params[:category_id])
+    category = Category.get_by_name(params[:category_name])
     item = category.items.create(item_params.merge(barcode: Item.generate_barcode(params[:name], params[:color], params[:size]), selling_price: params[:price].to_f + LineItem.calculate_vat(params[:price].to_f, 1)))
     if item.persisted?
       render json: ItemRepresenter.new(item).as_json, status: :created
@@ -44,7 +44,7 @@ class Api::V1::ItemsController < ApplicationController
   private
 
   def item_params
-    params.require(:item).permit(:name, :price, :size, :color, :barcode, :category_id)
+    params.require(:item).permit(:name, :price, :size, :color, :barcode, :category_id, :category_name)
   end
 
   def set_item

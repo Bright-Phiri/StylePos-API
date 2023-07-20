@@ -10,14 +10,14 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get '/show_items/:id', action: :show_items, controller: 'categories'
-      resources :items
       resources :categories do
-        resources :items do
+        resources :items, except: [:index, :create, :destory] do
           resources :inventory_levels, except: [:index, :destory]
         end
       end
       resources :dashboard, only: :index
       resources :inventory_levels, only: [:index, :destroy]
+      resources :items, only: [:index, :create, :destroy]
       resources :returns, only: :index
       resources :orders, only: [:index, :show, :destroy] do
         post '/return_item/:line_item_id', action: :return_item, controller: 'returns'
