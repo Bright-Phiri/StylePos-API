@@ -15,9 +15,9 @@ class Api::V1::CategoriesController < ApplicationController
     if @category.items_count.nil?
       render json: {}, status: :not_found
     else
-      @items = @category.items
-      @items = @items.paginate(page: params[:page], per_page: params[:per_page])
-      render json: @items, status: :ok
+      items = @category.items
+      items = items.paginate(page: params[:page], per_page: params[:per_page])
+      render json: { items: ItemsRepresenter.new(items).as_json, total: items.total_entries }
     end
   end
 
