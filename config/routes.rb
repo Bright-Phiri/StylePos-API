@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get '/show_items/:id', action: :show_items, controller: 'categories'
+      resources :items
       resources :categories do
         resources :items do
           resources :inventory_levels, except: [:index, :destory]
