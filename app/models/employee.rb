@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Employee < ApplicationRecord
+  enum :status, [:active, :disabled], suffix: true, default: :active
   VALID_ROLES = ['Cashier', 'Store Manager'].freeze
   has_many :orders
   has_secure_password
@@ -19,8 +20,6 @@ class Employee < ApplicationRecord
   with_options if: :user_role_manager? do |manager|
     manager.validates :first_name, :last_name, presence: true, on: :update
   end
-
-  enum :status, [:active, :disabled], suffix: true, default: :active
 
   def user_role_manager?
     job_title == "Store Manager"
