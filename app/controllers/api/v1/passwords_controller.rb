@@ -43,6 +43,6 @@ class Api::V1::PasswordsController < ApplicationController
   end
 
   def user_params
-    params.permit(:user_name, :email, :password, :password_confirmation, :token)
+    params.require(:user).permit(:user_name, :email, :password, :password_confirmation, :token)
   end
 end

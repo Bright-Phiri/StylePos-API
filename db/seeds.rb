@@ -28,5 +28,5 @@
 
 categories_array = ["Electronics", "Books", "Home Appliances", "Beauty and Personal Care", "Toys and Games", "Automotive", "Art and Craft Supplies", "Sports and Fitness"]
 categories_array.each do |category|
-  Category.create(name: category, desription: category)
+  Category.create(name: category, description: category)
 end
