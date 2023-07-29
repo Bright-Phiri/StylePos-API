@@ -8,8 +8,4 @@ class CustomerDisplayChannel < ApplicationCable::Channel
   def unsubscribed
     stop_all_streams
   end
-
-  on_subscribe do
-    DashboardBroadcastJob.perform_later('refresh_dashbaord')
-  end
 end
