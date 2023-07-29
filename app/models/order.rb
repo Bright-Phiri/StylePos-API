@@ -16,6 +16,7 @@ class Order < ApplicationRecord
 
   after_validation :initialize_order, on: :create
   after_commit { DashboardBroadcastJob.perform_later('order') }
+  after_create_commit { BroadcastTransactionJob.perform_later(self) }
 
   def processed_by
     "#{employee.first_name} #{employee.last_name}"
