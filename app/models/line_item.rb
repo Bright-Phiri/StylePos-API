@@ -12,6 +12,7 @@ class LineItem < ApplicationRecord
 
   after_commit :update_inventory_level_and_total, on: :create
   after_commit { DashboardBroadcastJob.perform_later('line_items') }
+  after_commit :broadcast_transaction, on: [:create, :update, :destroy]
   before_destroy :update_inventory_and_total_on_destroy
 
   def self.calculate_vat(pre_vat_price, requested_quantity)
@@ -26,6 +27,10 @@ class LineItem < ApplicationRecord
   end
 
   private
+
+  def broadcast_transaction
+    BroadcastTransactionJob.perform_later(self.order)
+  end
 
   def update_inventory_level_and_total
     ActiveRecord::Base.transaction do
