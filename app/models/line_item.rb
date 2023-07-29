@@ -11,8 +11,8 @@ class LineItem < ApplicationRecord
   before_validation { self.discount = 0 if self.discount.nil? }
 
   after_commit :update_inventory_level_and_total, on: :create
-  after_commit { DashboardBroadcastJob.perform_later('line_items') }
   after_commit :broadcast_transaction, on: [:create, :update, :destroy]
+  after_commit { DashboardBroadcastJob.perform_later('line_items') }
   before_destroy :update_inventory_and_total_on_destroy
 
   def self.calculate_vat(pre_vat_price, requested_quantity)
