@@ -4,3 +4,4 @@
   - default
   - mailers
   - dashboard_broadcast
+  - transaction_broadcast
