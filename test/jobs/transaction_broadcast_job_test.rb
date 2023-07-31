@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class BroadcastTransactionJobTest < ActiveJob::TestCase
+class TransactionBroadcastJobTest < ActiveJob::TestCase
   # test "the truth" do
   #   assert true
   # end

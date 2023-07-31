@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BroadcastTransactionJob < ApplicationJob
+class TransactionBroadcastJob < ApplicationJob
   queue_as :transaction_broadcast
 
   def perform(transaction)

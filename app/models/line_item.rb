@@ -11,7 +11,7 @@ class LineItem < ApplicationRecord
   before_validation { self.discount = 0 if self.discount.nil? }
 
   after_commit :update_inventory_level_and_total, on: :create
-  after_commit :broadcast_transaction, on: [:create, :update, :destroy]
+  after_commit :broadcast_to_customer_display, on: [:create, :update, :destroy]
   after_commit { DashboardBroadcastJob.perform_later('line_items') }
   before_destroy :update_inventory_and_total_on_destroy
 
@@ -28,8 +28,8 @@ class LineItem < ApplicationRecord
 
   private
 
-  def broadcast_transaction
-    BroadcastTransactionJob.perform_later(self.order)
+  def broadcast_to_customer_display
+    TransactionBroadcastJob.perform_later(self.order)
   end
 
   def update_inventory_level_and_total
