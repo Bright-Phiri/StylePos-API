@@ -4,12 +4,12 @@ class Api::V1::LineItemsController < ApplicationController
   before_action :set_line_item, only: [:update, :destroy, :apply_discount]
   def create
     order = Order.find(params[:order_id])
-    item = Item.preload(:inventory_level).find(params[:line_item][:item_id])
+    item = Item.preload(:inventory_level).find(line_item_params[:item_id])
     create_or_update_line_item(order, item)
   end
 
   def update
-    @line_item.destroy! unless params[:line_item][:quantity].to_i <= 0
+    @line_item.destroy! unless line_item_params[:quantity].to_i <= 0
     create_or_update_line_item(@line_item.order, @line_item.item)
   end
 
@@ -19,7 +19,7 @@ class Api::V1::LineItemsController < ApplicationController
   end
 
   def apply_discount
-    if @line_item.update(discount: params[:discount].to_f, total: @line_item.total - params[:discount].to_f)
+    if @line_item.update(discount: line_item_params[:discount].to_f, total: @line_item.total - line_item_params[:discount].to_f)
       @order.update(total: (@order.total - @line_item.discount))
       render json: OrderRepresenter.new(@order).as_json, status: :ok
     else
