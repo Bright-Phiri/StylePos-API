@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::ItemsController < ApplicationController
-  before_action :set_item, only: [:update, :destroy, :show]
+  before_action :set_item, only: [:update, :show]
   before_action :find_item, only: :find_item
   def index
     items = Item.preload(:inventory_level, :category).search(params[:search])
@@ -19,8 +19,8 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    category = Category.get_by_name(params[:category_name])
-    item = category.items.create(item_params.merge(barcode: Item.generate_barcode(params[:name], params[:color], params[:size]), selling_price: params[:price].to_f + LineItem.calculate_vat(params[:price].to_f, 1)))
+    category = Category.find(item_params[:category_id])
+    item = category.items.create(item_params.merge(barcode: Item.generate_barcode(item_params[:name], item_params[:color], item_params[:size]), selling_price: item_params[:price].to_f + LineItem.calculate_vat(item_params[:price].to_f, 1)))
     if item.persisted?
       render json: ItemRepresenter.new(item).as_json, status: :created
     else
@@ -29,7 +29,7 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update
-    if @item.update(item_params.merge(selling_price: params[:price].to_f + LineItem.calculate_vat(params[:price].to_f, 1)))
+    if @item.update(item_params.merge(selling_price: item_params[:price].to_f + LineItem.calculate_vat(item_params[:price].to_f, 1)))
       render json: ItemRepresenter.new(@item).as_json, status: :ok
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
@@ -37,14 +37,14 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
-    @item.destroy!
+    Item.find(params[:id]).destroy!
     head :no_content
   end
 
   private
 
   def item_params
-    params.require(:item).permit(:name, :price, :size, :color, :barcode, :category_id, :category_name)
+    params.require(:item).permit(:name, :price, :size, :color, :barcode, :category_id)
   end
 
   def set_item
