@@ -33,23 +33,29 @@ The following are required to run the Clothing Retail Stores API:
    ```
    $ bundle install
    ```
-3. Run migrations:
+3. Create database:
+
+   ```
+   $ bin/rails db:create
+   ```
+
+4. Run migrations:
 
    ```
    $ bin/rails db:migrate
    ```
    
-4. Running the API
+5. Running the API
 
    ```
    $ bin/rails server
    ```
-5. Start the Sidekiq server
+6. Start the Sidekiq server
 
    ```
    $ bin/bundle exec sidekiq
    ```
-6. Start the Redis server
+7. Start the Redis server
 
    ```
    $ bin/redis-server
