@@ -66,7 +66,6 @@ describe 'Categories API', type: :request do
 
     it 'returns unprocessable entity status when updating with invalid attributes' do
       put "/api/v1/categories/#{category.id}", params: { category: { name: '', description: '' } }, headers: headers
-
       expect(response).to have_http_status(:unprocessable_entity)
       category.reload
       expect(category.name).to eq('Clothing')
