@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'InventoryLevels API', type: :request do
+RSpec.describe 'Inventory Levels API', type: :request do
   let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
   let!(:item) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', size: 'L', color: 'Black') }
   let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy H T-shirt', price: '25000', size: 'M', color: 'Black') }
