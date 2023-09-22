@@ -47,40 +47,62 @@ describe 'Items API', type: :request do
     let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
     let!(:item) { FactoryBot.create(:item, category:, name: 'Example Item', color: 'Blue', size: 'M', price: 100.0, barcode: '1234567890') }
 
-    it 'retrieves a single item by ID' do
-      get "/api/v1/categories/#{category.id}/items/#{item.id}", headers: headers
-      expect(response).to have_http_status(:success)
-      parsed_response = JSON.parse(response.body)
-      expect(parsed_response['name']).to eq('Example Item')
-      expect(parsed_response['color']).to eq('Blue')
+    context 'given id that exists' do
+      it 'retrieves a single item' do
+        get "/api/v1/categories/#{category.id}/items/#{item.id}", headers: headers
+        expect(response).to have_http_status(:success)
+        parsed_response = JSON.parse(response.body)
+        expect(parsed_response['name']).to eq('Example Item')
+        expect(parsed_response['color']).to eq('Blue')
+      end
+    end
+
+    context 'given id that does not exist' do
+      it 'returns not_found status code' do
+        get "/api/v1/categories/#{category.id}/items/#{item.id}00", headers: headers
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 
   describe 'POST /api/v1/items' do
     let!(:category) { FactoryBot.create(:category, name: 'Kids', description: 'Kids') }
-    it 'creates a new item' do
-      post '/api/v1/items', params: { item: { category_id: category.id, name: 'Kids', color: 'Blue', size: 'M', price: '100.0' } }, headers: headers
-      expect(response).to have_http_status(:created)
-      parsed_response = JSON.parse(response.body)
-      expect(parsed_response).to have_key('name')
-      expect(parsed_response['name']).to eq('Kids')
-      created_item = Item.find_by(name: 'Kids')
-      expect(created_item).not_to be_nil
+
+    context 'given valid attributes' do
+      it 'creates a new item' do
+        post '/api/v1/items', params: { item: { category_id: category.id, name: 'Kids', color: 'Blue', size: 'M', price: '100.0' } }, headers: headers
+        expect(response).to have_http_status(:created)
+        parsed_response = JSON.parse(response.body)
+        expect(parsed_response).to have_key('name')
+        expect(parsed_response['name']).to eq('Kids')
+        created_item = Item.find_by(name: 'Kids')
+        expect(created_item).not_to be_nil
+      end
     end
 
-    it 'returns an error when the category does not exist' do
-      post '/api/v1/items', params: {
-        item: {
-          category_id: 999, # Category doesn't exist
-          name: 'New Item',
-          color: 'Red',
-          size: 'L',
-          price: 50.0
-        }
-      }, headers: headers
-      expect(response).to have_http_status(:not_found)
-      parsed_response = JSON.parse(response.body)
-      expect(parsed_response['error']).to include("Couldn't find Category with 'id'=999")
+    context 'given invalid attributes' do
+      it 'returns errors and unprocessable_entity status code' do
+        post '/api/v1/items', params: { item: { category_id: category.id, name: '', color: 'Blue', size: 'M', price: 'fhfh' } }, headers: headers
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to be_an(Array)
+      end
+    end
+
+    context 'category does not exist' do
+      it 'returns an error and not_found status code' do
+        post '/api/v1/items', params: {
+          item: {
+            category_id: 999, # Category doesn't exist
+            name: 'New Item',
+            color: 'Red',
+            size: 'L',
+            price: 50.0
+          }
+        }, headers: headers
+        expect(response).to have_http_status(:not_found)
+        parsed_response = JSON.parse(response.body)
+        expect(parsed_response['error']).to include("Couldn't find Category with 'id'=999")
+      end
     end
   end
 
@@ -88,31 +110,44 @@ describe 'Items API', type: :request do
     let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
     let!(:item) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', size: 'L', color: 'Black', barcode: 'GHGHG85944') }
 
-    it 'updates an item' do
-      new_attributes = { name: 'Tommy Hilfiger T-shirt', price: '24000', size: 'M', color: 'Red' }
-      put "/api/v1/categories/#{category.id}/items/#{item.id}", params: { item: new_attributes }, headers: headers
-      expect(response).to have_http_status(:success)
-      item.reload
-      expect(item.size).to eq('M')
-      expect(item.color).to eq('Red')
+    context 'given valid attributes' do
+      it 'updates an item' do
+        new_attributes = { name: 'Tommy Hilfiger T-shirt', price: '24000', size: 'M', color: 'Red' }
+        put "/api/v1/categories/#{category.id}/items/#{item.id}", params: { item: new_attributes }, headers: headers
+        expect(response).to have_http_status(:success)
+        item.reload
+        expect(item.size).to eq('M')
+        expect(item.color).to eq('Red')
+      end
     end
 
-    it 'returns an error when updating with invalid attributes' do
-      put "/api/v1/categories/#{category.id}/items/#{item.id}", params: { item: { name: 'Tommy Hilfiger T-shirt', price: '', size: 'M', color: '' } }, headers: headers
-
-      expect(response).to have_http_status(:unprocessable_entity)
-      category.reload
-      expect(item.size).to eq('L')
-      expect(item.color).to eq('Black')
+    context 'given invalid attributes' do
+      it 'returns an error and unprocessable_entity status code' do
+        put "/api/v1/categories/#{category.id}/items/#{item.id}", params: { item: { name: 'Tommy Hilfiger T-shirt', price: '', size: 'M', color: '' } }, headers: headers
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to be_an(Array)
+        category.reload
+        expect(item.size).to eq('L')
+        expect(item.color).to eq('Black')
+      end
     end
   end
 
   describe 'DELETE /categories/:id' do
     let!(:category) { FactoryBot.create(:category, name: 'Kids', description: 'Kids') }
     let!(:item) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', size: 'L', color: 'Black') }
-    it 'deletes an item' do
-      expect { delete "/api/v1/items/#{item.id}", headers: headers }.to change { Item.count }.from(1).to(0)
-      expect(response).to have_http_status(:no_content)
+    context 'given id that exists' do
+      it 'deletes an item' do
+        expect { delete "/api/v1/items/#{item.id}", headers: headers }.to change { Item.count }.from(1).to(0)
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+
+    context 'given id that does not exist' do
+      it 'returns a not_found status code' do
+        delete "/api/v1/items/#{item.id}00", headers: headers
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 end

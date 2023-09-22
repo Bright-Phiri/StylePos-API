@@ -19,16 +19,25 @@ describe 'Customers API', type: :request do
   end
 
   describe 'GET /customers/:id' do
-    it 'returns a single employee using ID' do
-      get "/api/v1/customers/#{customer.id}", headers: headers
-      parsed_response = JSON.parse(response.body)
-      expect(response).to have_http_status(:ok)
-      expect(parsed_response['id']).to eq(customer.id)
+    context 'given id that exists' do
+      it 'returns a single employee using ID' do
+        get "/api/v1/customers/#{customer.id}", headers: headers
+        parsed_response = JSON.parse(response.body)
+        expect(response).to have_http_status(:ok)
+        expect(parsed_response['id']).to eq(customer.id)
+      end 
+    end
+
+    context 'given id that does not exists' do
+      it 'returns not_found status code' do
+        get "/api/v1/customers/#{customer.id}00", headers: headers
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 
   describe 'POST /customers' do
-    context 'when valid data is provided' do
+    context 'given valid attributes' do
       it 'saves a customer' do
         customer_params = { name: 'Mike', phone_number: '0883490444' }
         expect {
@@ -38,8 +47,8 @@ describe 'Customers API', type: :request do
       end
     end
 
-    context 'when invalid data is provided' do
-      it 'it returns unprocessable entity status code' do
+    context 'given invalid attributes' do
+      it 'returns unprocessable entity status code' do
         customer_params = { name: 'Mike', phone_number: '99999' }
         expect {
           post '/api/v1/customers/', params: { customer: customer_params }, headers: headers
@@ -50,7 +59,7 @@ describe 'Customers API', type: :request do
   end
 
   describe 'PUT /customers/:id' do
-    context 'when valid data is provided' do
+    context 'given valid attributes' do
       it 'updates a customer' do
         new_params = { name: 'Mike', phone_number: '0883490444' }
         put "/api/v1/customers/#{customer.id}", params: { customer: new_params }, headers: headers
@@ -61,8 +70,8 @@ describe 'Customers API', type: :request do
       end
     end
 
-    context 'when invalid data is provided' do
-      it 'it returns unprocessable entity status code' do
+    context 'given invalid attributes' do
+      it 'returns unprocessable entity status code' do
         new_params = { name: 'Mike', phone_number: '99999' }
         put "/api/v1/customers/#{customer.id}", params: { customer: new_params }, headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
@@ -73,10 +82,19 @@ describe 'Customers API', type: :request do
   end
 
   describe 'DELETE /customers/:id' do
-    it 'deletes a customer' do
-      delete "/api/v1/customers/#{customer.id}", headers: headers
-      expect(response).to have_http_status(:no_content)
-      expect(Customer.count).to eq(0)
+    context 'given id that exists' do
+      it 'deletes a customer' do
+        delete "/api/v1/customers/#{customer.id}", headers: headers
+        expect(response).to have_http_status(:no_content)
+        expect(Customer.count).to eq(0)
+      end
+    end
+
+    context 'given id that does not exists' do
+      it 'returns not_found status code' do
+        delete "/api/v1/customers/#{customer.id}00", headers: headers
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 end

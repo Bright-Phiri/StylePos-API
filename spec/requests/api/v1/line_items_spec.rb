@@ -15,49 +15,105 @@ describe 'Line Items API', type: :request do
   end
 
   describe 'POST /api/v1/employees/:employee_id/orders/:order_id/line_items' do
-    it 'creates a new line item' do
-      post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 3 } }, headers: headers
-      expect(response).to have_http_status(:ok)
+    context 'given valid attributes' do
+      it 'creates a new line item' do
+        post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 3 } }, headers: headers
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'given invalid attributes' do
+      it 'returns an error and unprocessable_entity status code' do
+        post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 'ghghgh' } }, headers: headers
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to be_an(Array)
+      end
     end
   end
 
   describe 'PUT /api/v1/employees/:employee_id/orders/:order_id/line_items/:line_item_id' do
-    it 'updates a line item' do
-      post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
-      expect(response).to have_http_status(:ok)
-      response_body = JSON.parse(response.body)
-      order_id = response_body['id']
-      order = Order.find(order_id)
-      created_line_item = order.line_items.last
-      put "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items/#{created_line_item.id}", params: { line_item: { quantity: 3 } }, headers: headers
-      expect(response).to have_http_status(:ok)
+    context 'given valid attributes' do
+      it 'updates a line item' do
+        post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
+        expect(response).to have_http_status(:ok)
+        response_body = JSON.parse(response.body)
+        order_id = response_body['id']
+        order = Order.find(order_id)
+        created_line_item = order.line_items.last
+        put "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items/#{created_line_item.id}", params: { line_item: { quantity: 3 } }, headers: headers
+        expect(response).to have_http_status(:ok)
+      end
+
+      context 'given invalid attributes' do
+        it 'returns an error and unprocessable_entity status code' do
+          post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
+          expect(response).to have_http_status(:ok)
+          response_body = JSON.parse(response.body)
+          order_id = response_body['id']
+          order = Order.find(order_id)
+          created_line_item = order.line_items.last
+          put "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items/#{created_line_item.id}", params: { line_item: { quantity: 'jgjf' } }, headers: headers
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(JSON.parse(response.body)).to be_an(Array)
+        end
+      end
     end
   end
 
   describe 'PUT /api/v1/employees/employee_id/orders/order_id/line_items/apply_discount/line_item_id' do
-    it 'apply discount to line item' do
-      post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
-      expect(response).to have_http_status(:ok)
-      response_body = JSON.parse(response.body)
-      order = Order.find(response_body['id'])
-      line_item = order.line_items.last
-      put "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items/apply_discount/#{line_item.id}", params: { line_item: { discount: 20 } }, headers: headers
-      cached_order = order.line_items.reload
-      expect(response).to have_http_status(:ok)
-      expect(cached_order.last.discount).to eq(20)
+    context 'given valid discount value' do
+      it 'apply discount to line item' do
+        post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
+        expect(response).to have_http_status(:ok)
+        response_body = JSON.parse(response.body)
+        order = Order.find(response_body['id'])
+        line_item = order.line_items.last
+        put "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items/apply_discount/#{line_item.id}", params: { line_item: { discount: 20 } }, headers: headers
+        cached_order = order.line_items.reload
+        expect(response).to have_http_status(:ok)
+        expect(cached_order.last.discount).to eq(20)
+      end
+    end
+
+    context "given invalid discount value" do
+      it 'returns an error and unprocessable_entity status code' do
+        post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
+        expect(response).to have_http_status(:ok)
+        response_body = JSON.parse(response.body)
+        order = Order.find(response_body['id'])
+        line_item = order.line_items.last
+        put "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items/apply_discount/#{line_item.id}", params: { line_item: { discount: order.total + 200 } }, headers: headers
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to be_an(Array)
+      end
     end
   end
 
   describe 'DELETE /api/v1/employees/employee_id/orders/order_id/line_items/line_item_id' do
-    it 'Deletes a line item' do
-      post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
-      expect(response).to have_http_status(:ok)
-      response_body = JSON.parse(response.body)
-      order_id = response_body['id']
-      order = Order.find(order_id)
-      line_item = order.line_items.last
-      delete "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items/#{line_item.id}", headers: headers
-      expect(response).to have_http_status(:ok)
+    context 'given id that does not exist' do
+      it 'return a not_found status code' do
+        post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
+        expect(response).to have_http_status(:ok)
+        response_body = JSON.parse(response.body)
+        order_id = response_body['id']
+        order = Order.find(order_id)
+        line_item = order.line_items.last
+        delete "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items/#{line_item.id}00", headers: headers
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'given id that exists' do
+      it 'Deletes a line item' do
+        post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
+        expect(response).to have_http_status(:ok)
+        response_body = JSON.parse(response.body)
+        order_id = response_body['id']
+        order = Order.find(order_id)
+        line_item = order.line_items.last
+        delete "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items/#{line_item.id}", headers: headers
+        expect(response).to have_http_status(:ok)
+      end
     end
   end
 end
