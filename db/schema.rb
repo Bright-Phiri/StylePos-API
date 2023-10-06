@@ -20,7 +20,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_084704) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "items_count"
-    t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
   create_table "customers", force: :cascade do |t|
@@ -28,7 +27,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_084704) do
     t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["phone_number"], name: "index_customers_on_phone_number", unique: true
   end
 
   create_table "employees", force: :cascade do |t|
@@ -44,7 +42,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_084704) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.integer "status"
-    t.index ["phone_number"], name: "index_employees_on_phone_number", unique: true
   end
 
   create_table "inventory_levels", force: :cascade do |t|
@@ -54,7 +51,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_084704) do
     t.bigint "item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_inventory_levels_on_item_id", unique: true
+    t.index ["item_id"], name: "index_inventory_levels_on_item_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -66,7 +63,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_18_084704) do
     t.datetime "updated_at", null: false
     t.decimal "selling_price"
     t.string "barcode"
-    t.bigint "category_id", null: false
+    t.bigint "category_id"
     t.index ["category_id"], name: "index_items_on_category_id"
   end
 

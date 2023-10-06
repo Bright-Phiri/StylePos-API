@@ -6,7 +6,7 @@ class Employee < ApplicationRecord
   has_many :orders
   has_secure_password
   validates_associated :orders
-  validates :first_name, :last_name, presence: true, unless: :user_role_manager?
+  validates :first_name, :last_name, presence: true, unless: :store_manager?
   validates :password, length: { in: 6..8 }
   with_options presence: true do
     validates :user_name, uniqueness: true, format: { without: /\s/, message: 'must contain no spaces' }
@@ -17,12 +17,14 @@ class Employee < ApplicationRecord
     end
   end
 
-  with_options if: :user_role_manager? do |manager|
+  with_options if: :store_manager? do |manager|
     manager.validates :first_name, :last_name, presence: true, on: :update
   end
 
-  def user_role_manager?
-    job_title == "Store Manager"
+  VALID_ROLES.each do |role|
+    define_method "#{role.downcase.tr(' ', '_')}?" do
+      job_title == role
+    end
   end
 
   def generate_password_token!
