@@ -20,7 +20,7 @@ class Api::V1::LineItemsController < ApplicationController
 
   def apply_discount
     if @line_item.update(discount: line_item_params[:discount].to_f, total: @line_item.total - line_item_params[:discount].to_f)
-      @order.update(total: (@order.total - @line_item.discount))
+      @line_item.order.update(total: (@line_item.order.total - @line_item.discount))
       render json: OrderRepresenter.new(@order).as_json, status: :ok
     else
       render json: @line_item.errors.full_messages, status: :unprocessable_entity
@@ -34,8 +34,7 @@ class Api::V1::LineItemsController < ApplicationController
   end
 
   def set_line_item
-    @order = Order.preload(:line_items).find(params[:order_id])
-    @line_item = @order.line_items.find(params[:id])
+    @line_item = LineItem.find(params[:id])
   end
 
   def create_or_update_line_item(order, item)
