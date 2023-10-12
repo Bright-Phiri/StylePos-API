@@ -13,7 +13,7 @@ Rails.application.routes.draw do
         collection do
           get '/show_items/:id', action: :show_items, controller: 'categories'
         end
-        resources :items, except: [:index, :create, :destory] do
+        resources :items, except: [:index, :create, :destory], shallow: true do
           resources :inventory_levels, except: [:index, :destory]
         end
       end
@@ -38,7 +38,7 @@ Rails.application.routes.draw do
           post '/activate_user/:id', action: :activate_user, controller: 'employees'
           post '/register', action: :set_manager, controller: 'employees'
         end
-        resources :orders, except: [:index, :show, :destory] do
+        resources :orders, except: [:index, :show, :destory], shallow: true do
           resources :line_items, only: [:create, :update, :destroy] do
             collection do
               put '/apply_discount/:id', action: :apply_discount, controller: 'line_items'
