@@ -44,7 +44,6 @@ class Api::V1::InventoryLevelsController < ApplicationController
   end
 
   def set_inventory_level
-    item = Item.find(params[:item_id])
-    @inventory_level = item.inventory_level
+    @inventory_level = InventoryLevel.find(params[:id])
   end
 end
