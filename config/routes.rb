@@ -13,13 +13,13 @@ Rails.application.routes.draw do
         collection do
           get '/show_items/:id', action: :show_items, controller: 'categories'
         end
-        resources :items, except: [:index, :create, :destory], shallow: true do
-          resources :inventory_levels, except: [:index, :destory]
+        resources :items, shallow: true, except: [:index, :destroy] do
+          resources :inventory_levels, except: [:index, :destroy]
         end
       end
       resources :dashboard, only: :index
       resources :inventory_levels, only: [:index, :destroy]
-      resources :items, only: [:index, :create, :destroy] do
+      resources :items, only: [:index, :destroy] do
         collection do
           get '/find_item/:barcode', action: :find_item, controller: 'items'
         end

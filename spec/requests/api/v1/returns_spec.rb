@@ -15,7 +15,7 @@ describe 'Returns API', type: :request do
 
   describe 'GET /returns' do
     it 'retrives all item retuns' do
-      post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
+      post "/api/v1/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
       expect(response).to have_http_status(:ok)
       response_body = JSON.parse(response.body)
       order = Order.find(response_body['id'])
@@ -33,7 +33,7 @@ describe 'Returns API', type: :request do
 
   describe 'POST /api/v1/employees/employee_id/orders/order_id/line_items' do
     it 'returns an item' do
-      post "/api/v1/employees/#{employee.id}/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
+      post "/api/v1/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
       expect(response).to have_http_status(:ok)
       response_body = JSON.parse(response.body)
       order = Order.find(response_body['id'])

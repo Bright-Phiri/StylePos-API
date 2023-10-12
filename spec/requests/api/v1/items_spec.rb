@@ -43,13 +43,13 @@ describe 'Items API', type: :request do
     end
   end
 
-  describe 'GET /api/v1/categories/:category_id/items/:id' do
+  describe 'GET /api/v1/items/:id' do
     let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
     let!(:item) { FactoryBot.create(:item, category:, name: 'Example Item', color: 'Blue', size: 'M', price: 100.0, barcode: '1234567890') }
 
     context 'given id that exists' do
       it 'retrieves a single item' do
-        get "/api/v1/categories/#{category.id}/items/#{item.id}", headers: headers
+        get "/api/v1/items/#{item.id}", headers: headers
         expect(response).to have_http_status(:success)
         parsed_response = JSON.parse(response.body)
         expect(parsed_response['name']).to eq('Example Item')
@@ -59,7 +59,7 @@ describe 'Items API', type: :request do
 
     context 'given id that does not exist' do
       it 'returns not_found status code' do
-        get "/api/v1/categories/#{category.id}/items/#{item.id}00", headers: headers
+        get "/api/v1/items/#{item.id}00", headers: headers
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -70,7 +70,7 @@ describe 'Items API', type: :request do
 
     context 'given valid attributes' do
       it 'creates a new item' do
-        post '/api/v1/items', params: { item: { category_id: category.id, name: 'Kids', color: 'Blue', size: 'M', price: '100.0' } }, headers: headers
+        post "/api/v1/categories/#{category.id}/items", params: { item: { category_id: category.id, name: 'Kids', color: 'Blue', size: 'M', price: '100.0' } }, headers: headers
         expect(response).to have_http_status(:created)
         parsed_response = JSON.parse(response.body)
         expect(parsed_response).to have_key('name')
@@ -82,7 +82,7 @@ describe 'Items API', type: :request do
 
     context 'given invalid attributes' do
       it 'returns errors and unprocessable_entity status code' do
-        post '/api/v1/items', params: { item: { category_id: category.id, name: '', color: 'Blue', size: 'M', price: 'fhfh' } }, headers: headers
+        post "/api/v1/categories/#{category.id}/items", params: { item: { category_id: category.id, name: '', color: 'Blue', size: 'M', price: 'fhfh' } }, headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
         expect(JSON.parse(response.body)).to be_an(Array)
       end
@@ -90,7 +90,7 @@ describe 'Items API', type: :request do
 
     context 'category does not exist' do
       it 'returns an error and not_found status code' do
-        post '/api/v1/items', params: {
+        post "/api/v1/categories/#{999}/items", params: {
           item: {
             category_id: 999, # Category doesn't exist
             name: 'New Item',
@@ -106,14 +106,14 @@ describe 'Items API', type: :request do
     end
   end
 
-  describe 'PUT /api/v1/categories/:category_id/items/:id' do
+  describe 'PUT /api/v1/items/:id' do
     let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
     let!(:item) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', size: 'L', color: 'Black', barcode: 'GHGHG85944') }
 
     context 'given valid attributes' do
       it 'updates an item' do
         new_attributes = { name: 'Tommy Hilfiger T-shirt', price: '24000', size: 'M', color: 'Red' }
-        put "/api/v1/categories/#{category.id}/items/#{item.id}", params: { item: new_attributes }, headers: headers
+        put "/api/v1/items/#{item.id}", params: { item: new_attributes }, headers: headers
         expect(response).to have_http_status(:success)
         item.reload
         expect(item.size).to eq('M')
@@ -123,7 +123,7 @@ describe 'Items API', type: :request do
 
     context 'given invalid attributes' do
       it 'returns an error and unprocessable_entity status code' do
-        put "/api/v1/categories/#{category.id}/items/#{item.id}", params: { item: { name: 'Tommy Hilfiger T-shirt', price: '', size: 'M', color: '' } }, headers: headers
+        put "/api/v1/items/#{item.id}", params: { item: { name: 'Tommy Hilfiger T-shirt', price: '', size: 'M', color: '' } }, headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
         expect(JSON.parse(response.body)).to be_an(Array)
         category.reload
