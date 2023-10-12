@@ -15,13 +15,13 @@ class Api::V1::LineItemsController < ApplicationController
 
   def destroy
     @line_item.destroy!
-    render json: OrderRepresenter.new(@order).as_json, status: :ok
+    render json: OrderRepresenter.new(@line_item.order).as_json, status: :ok
   end
 
   def apply_discount
     if @line_item.update(discount: line_item_params[:discount].to_f, total: @line_item.total - line_item_params[:discount].to_f)
       @line_item.order.update(total: (@line_item.order.total - @line_item.discount))
-      render json: OrderRepresenter.new(@order).as_json, status: :ok
+      render json: OrderRepresenter.new(@line_item.order).as_json, status: :ok
     else
       render json: @line_item.errors.full_messages, status: :unprocessable_entity
     end
