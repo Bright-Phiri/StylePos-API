@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Employee < ApplicationRecord
+  scope :active_employees, -> { where(status: :active) }
+  scope :inactive_employees, -> { active_employees.invert_where }
   enum :status, [:active, :disabled], suffix: true, default: :active
   VALID_ROLES = ['Cashier', 'Store Manager'].freeze
   has_many :orders
