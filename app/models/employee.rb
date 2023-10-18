@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 class Employee < ApplicationRecord
-  scope :active, -> { where(status: :active) }
-  scope :inactive, -> { active_employees.invert_where }
   enum :status, [:active, :disabled], suffix: true, default: :active
   VALID_ROLES = ['Cashier', 'Store Manager'].freeze
   has_many :orders
   has_secure_password
   validates_associated :orders
-  validates :first_name, :last_name, presence: true, unless: :store_manager?
+  validates :first_name, :last_name, presence: true, unless: -> { send(:store_manager?) }
   validates :password, length: { in: 6..8 }
   with_options presence: true do
     validates :user_name, uniqueness: { conditions: -> { where(status: :active) } }, format: { without: /\s/, message: 'must contain no spaces' }
@@ -19,7 +17,7 @@ class Employee < ApplicationRecord
     end
   end
 
-  with_options if: :store_manager? do |manager|
+  with_options if: -> { send(:store_manager?) } do |manager|
     manager.validates :first_name, :last_name, presence: true, on: :update
   end
 
