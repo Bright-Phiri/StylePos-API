@@ -26,7 +26,7 @@ class LineItem < ApplicationRecord
   end
 
   def self.default_vat_rate
-    Configuration.last&.vat_rate || 0.0
+    Config.last&.vat_rate || 0.0
   end
 
   private

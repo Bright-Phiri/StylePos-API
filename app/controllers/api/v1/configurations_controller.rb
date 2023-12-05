@@ -2,16 +2,17 @@
 
 class Api::V1::ConfigurationsController < ApplicationController
   before_action :set_configuration, only: [:show, :update, :destroy]
+  before_action :require_login
 
   def show
     render json: @configuration
   end
 
   def create
-    if Configuration.exists?
+    if Config.exists?
       render json: { error: 'Configuration already exists.' }, status: :conflict
     else
-      configuration = Configuration.new(configuration_params)
+      configuration = Config.new(configuration_params)
       if configuration.save
         render json: configuration, status: :created
       else
@@ -36,10 +37,10 @@ class Api::V1::ConfigurationsController < ApplicationController
   private
 
   def configuration_params
-    params.require(:configuration).permit(:vat_rate)
+    params.require(:config).permit(:vat_rate)
   end
 
   def set_configuration
-    @configuration = Configuration.find(params[:id])
+    @configuration = Config.find(params[:id])
   end
 end

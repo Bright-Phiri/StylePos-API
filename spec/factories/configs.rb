@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :configuration do
+  factory :config do
     vat_rate { "9.99" }
   end
 end
