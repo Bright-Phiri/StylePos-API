@@ -41,7 +41,7 @@ class Api::V1::ConfigurationsController < ApplicationController
   private
 
   def configuration_params
-    params.require(:config).permit(:vat_rate)
+    params.require(:configuration).permit(:vat_rate)
   end
 
   def set_configuration

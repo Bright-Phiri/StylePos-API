@@ -64,12 +64,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "configurations", force: :cascade do |t|
-    t.decimal "vat_rate"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "customers", force: :cascade do |t|
     t.string "name"
     t.string "phone_number"
