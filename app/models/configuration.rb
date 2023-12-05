@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
 class Configuration < ApplicationRecord
-  validates :vat_rate, presence: true, numericality: true, allow_nil: true
+  VALID_VAT_RATE = [16.5].freeze
+  validates :vat_rate, inclusion: { in: VALID_VAT_RATE, message: 'must be 16.5' }, allow_nil: true
 end

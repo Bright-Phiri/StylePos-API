@@ -1,18 +1,22 @@
 # frozen_string_literal: true
 
 class Api::V1::ConfigurationsController < ApplicationController
-  before_action :set_category, only: [:show, :update, :destroy]
+  before_action :set_configuration, only: [:show, :update, :destroy]
 
   def show
     render json: @configuration
   end
 
   def create
-    configuration = Configuration.new(configuration_params)
-    if configuration.save
-      render json: configuration, status: :created
+    if Configuration.exists?
+      render json: { error: 'Configuration already exists.' }, status: :conflict
     else
-      render json: configuration.errors.full_messages, status: :unprocessable_entity
+      configuration = Configuration.new(configuration_params)
+      if configuration.save
+        render json: configuration, status: :created
+      else
+        render json: configuration.errors.full_messages, status: :unprocessable_entity
+      end
     end
   end
 
@@ -35,7 +39,7 @@ class Api::V1::ConfigurationsController < ApplicationController
     params.require(:configuration).permit(:vat_rate)
   end
 
-  def set_category
+  def set_configuration
     @configuration = Configuration.find(params[:id])
   end
 end
