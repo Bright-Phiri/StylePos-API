@@ -2,7 +2,6 @@
 
 class Api::V1::ConfigurationsController < ApplicationController
   before_action :set_configuration, only: [:update, :destroy]
-  skip_before_action :require_login
 
   def index
     render json: Config.all
