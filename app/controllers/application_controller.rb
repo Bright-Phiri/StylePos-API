@@ -5,6 +5,7 @@ class ApplicationController < ActionController::API
   include ExceptionHandler
 
   def encode_token(payload)
+    payload[:exp] = 24.hours.from_now.to_i # Set expiration time to 24 hours from now
     JWT.encode(payload, Rails.application.secrets.secret_key_base)
   end
 
@@ -17,9 +18,11 @@ class ApplicationController < ActionController::API
     return unless auth_header
 
     token = auth_header.split(' ')[1]
+
     # header: { 'Authorization': 'Bearer <token>' }
     begin
-      JWT.decode(token, Rails.application.secrets.secret_key_base, true, algorithm: 'HS256')
+      decoded = JWT.decode(token, Rails.application.secrets.secret_key_base, true, algorithm: 'HS256')
+      return decoded if decoded && decoded[0]['exp'] >= Time.now.to_i
     rescue JWT::DecodeError
       nil
     end

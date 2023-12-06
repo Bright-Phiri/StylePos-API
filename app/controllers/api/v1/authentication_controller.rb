@@ -9,7 +9,7 @@ class Api::V1::AuthenticationController < ApplicationController
 
       if @user&.authenticate(params[:password])
         if @user.active_status?
-          token = encode_token({ user_id: @user.id })
+          token = encode_token({ user_id: @user.id, exp: 1.hour.from_now.to_i })
           render json: { user: @user, token: }, status: :ok
         else
           render json: { message: 'User account disabled' }, status: :locked
