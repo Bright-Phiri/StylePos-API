@@ -36,7 +36,7 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Mount Action Cable outside main process or domain.
-  # config.action_cable.mount_path = nil
+  # config.action_cable.mount_path = nil 
   # config.action_cable.url = "wss://example.com/cable"
   config.action_cable.allowed_request_origins = [ "http://localhost:8080/", "https://deploy-preview-4--stylepos.netlify.app" ]
 
