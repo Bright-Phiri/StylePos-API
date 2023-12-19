@@ -2,7 +2,7 @@
 
 require 'csv'
 
-category = Category.find(1)
+category = Category.first
 file_path = Rails.root.join('data.csv')
 csv_data = File.read(file_path)
 csv = CSV.parse(csv_data, headers: false)
