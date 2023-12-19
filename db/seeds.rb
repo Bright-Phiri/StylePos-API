@@ -2,17 +2,13 @@
 
 require 'csv'
 
-category = Category.create(name: 'Clothing', description: 'A variety of stylish clothing for every occasion, from casual to formal')
+category = Category.find(1)
 file_path = Rails.root.join('data.csv')
 csv_data = File.read(file_path)
 csv = CSV.parse(csv_data, headers: false)
 csv.each do |row|
-  item = Item.new do |i|
-    i.name = row[0]
-    i.price = row[1]
-    i.size = row[2]
-    i.color = row[3]
-    i.category_id = category.id
-  end
-  item.save!
+  item = category.items.create(
+    name: row[0], price: row[1], size: row[2], color: row[3],
+    barcode: Item.generate_barcode(row[0], row[3], row[2]),
+    selling_price: row[1].to_f + LineItem.calculate_vat(row[1].to_f, 1))
 end
