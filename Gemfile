@@ -43,8 +43,6 @@ gem 'rake', '13.1.0'
 gem 'redis', '~> 4.0'
 gem 'sidekiq'
 
-gem 'whenever', require: false
-
 gem 'will_paginate', '~> 3.1.1'
 
 group :development, :test do
