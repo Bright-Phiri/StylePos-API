@@ -8,7 +8,7 @@ module ExceptionHandler
 
   included do
     rescue_from ActiveRecord::RecordNotFound do
-      render json: { error: "Item not found with barcode #{params[:barcode]}" }, status: :not_found
+      render json: { error: "Record not found" }, status: :not_found
     end
 
     rescue_from ExceptionHandler::InvalidUsername do |exception|
