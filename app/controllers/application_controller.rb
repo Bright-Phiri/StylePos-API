@@ -15,11 +15,6 @@ class ApplicationController < ActionController::API
     request.headers['Authorization']
   end
 
-  def decode_action_cable_token(auth_header)
-    token = auth_header.split(' ')[1]
-    decode_token(token)
-  end
-
   def decode_token(token)
     begin
       decoded = JWT.decode(token, Rails.application.secrets.secret_key_base, true, algorithm: 'HS256')
@@ -27,6 +22,11 @@ class ApplicationController < ActionController::API
     rescue JWT::DecodeError
       nil
     end
+  end
+
+  def decode_action_cable_token(auth_header)
+    token = auth_header.split(' ')[1]
+    decode_token(token)
   end
 
   def decoded_token
