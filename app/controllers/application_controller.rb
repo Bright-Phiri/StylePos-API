@@ -15,18 +15,25 @@ class ApplicationController < ActionController::API
     request.headers['Authorization']
   end
 
-  def decoded_token
-    return unless auth_header
-
+  def decode_action_cable_token(auth_header)
     token = auth_header.split(' ')[1]
+    decode_token(token)
+  end
 
-    # header: { 'Authorization': 'Bearer <token>' }
+  def decode_token(token)
     begin
-      decoded = JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256')
+      decoded = JWT.decode(token, Rails.application.secrets.secret_key_base, true, algorithm: 'HS256')
       return decoded if decoded && decoded[0]['exp'] >= Time.now.to_i
     rescue JWT::DecodeError
       nil
     end
+  end
+
+  def decoded_token
+    return unless auth_header
+
+    token = auth_header.split(' ')[1]
+    decode_token(token)
   end
 
   def logged_in_user
