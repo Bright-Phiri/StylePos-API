@@ -18,7 +18,6 @@ Rails.application.routes.draw do
         end
       end
       resources :configurations
-      resources :dashboard, only: :index
       resources :inventory_levels, only: [:index, :destroy]
       resources :items, only: [:index, :destroy] do
         collection do
