@@ -56,6 +56,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "items_count"
+    t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
   create_table "configs", force: :cascade do |t|
@@ -69,6 +70,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["phone_number"], name: "unique_customer_phone_numbers", unique: true
   end
 
   create_table "employees", force: :cascade do |t|
@@ -84,6 +86,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.integer "status"
+    t.index ["phone_number"], name: "unique_employees_phone_numbers", unique: true
   end
 
   create_table "inventory_levels", force: :cascade do |t|
@@ -93,7 +96,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.bigint "item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_inventory_levels_on_item_id"
+    t.index ["item_id"], name: "index_inventory_levels_on_item_id", unique: true
   end
 
   create_table "items", force: :cascade do |t|
@@ -105,7 +108,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.datetime "updated_at", null: false
     t.decimal "selling_price"
     t.string "barcode"
-    t.bigint "category_id"
+    t.bigint "category_id", null: false
     t.index ["category_id"], name: "index_items_on_category_id"
   end
 
@@ -131,15 +134,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.index ["employee_id"], name: "index_orders_on_employee_id"
   end
 
-  create_table "people", force: :cascade do |t|
-    t.string "type"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "returns", force: :cascade do |t|
     t.string "reason"
     t.decimal "refund_amount"
@@ -149,14 +143,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_returns_on_item_id"
     t.index ["order_id"], name: "index_returns_on_order_id"
-  end
-
-  create_table "test1s", id: false, force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_test1s_on_name", unique: true
   end
 
   create_table "users", id: false, force: :cascade do |t|
