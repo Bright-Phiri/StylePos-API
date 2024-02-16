@@ -16,7 +16,7 @@ class Item < ApplicationRecord
   belongs_to :category, counter_cache: true
   validates_associated :line_items
   validates :name, :size, :color, presence: true
-  validates :price, numericality: { greater_than: 0 }
+  validates :price, :selling_price, numericality: { greater_than: 0 }
 
   def enough_inventory?(requested_quantity)
     raise ExceptionHandler::InventoryLevelError, 'Inventory level not added' unless inventory_level.present?
@@ -42,7 +42,10 @@ class Item < ApplicationRecord
     end
   end
 
-  def self.generate_barcode(name, color, size)
+  def self.generate_barcode(item_params)
+    name = item_params[:name]
+    color = item_params[:color]
+    size = item_params[:size]
     item_name = name.split("").shuffle.join("")
     item_color = color.split("").shuffle.join("")
     gtin = item_name.byteslice(0, 4).unpack('U*').join.to_i.to_s.rjust(4, '0')

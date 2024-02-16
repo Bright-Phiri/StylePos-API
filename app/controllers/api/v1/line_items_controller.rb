@@ -38,10 +38,11 @@ class Api::V1::LineItemsController < ApplicationController
   end
 
   def create_or_update_line_item(order, item)
-    raise ExceptionHandler::InventoryLevelError, 'Not enough inventory' unless item.enough_inventory?(params[:line_item][:quantity].to_i)
+    raise ExceptionHandler::InventoryLevelError, 'Not enough inventory' unless item.enough_inventory?(line_item_params[:quantity].to_i)
 
-    vat = LineItem.calculate_vat(item.price, params[:line_item][:quantity].to_i)
-    line_item = order.line_items.create(line_item_params.merge(item_id: item.id, price: item.price + vat, vat:, total: LineItem.calculate_total(item.price, params[:line_item][:quantity].to_i)))
+    vat = LineItem.calculate_vat(item.selling_price, item.quantity.to_i)
+    total_price = item.selling_price + vat
+    line_item = order.line_items.create(line_item_params.merge(item_id: item.id, price: total_price, vat:, total: LineItem.calculate_total(item.selling_price, item.quantity.to_i)))
     if line_item.new_record?
       render json: line_item.errors.full_messages, status: :unprocessable_entity
     else
