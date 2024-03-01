@@ -50,13 +50,13 @@ class Api::V1::EmployeesController < ApplicationController
   def disable_user
     @employee.status = 1
     @employee.save(validate: false)
-    render json: {}, status: :ok
+    head :ok
   end
 
   def activate_user
     @employee.status = 0
     @employee.save(validate: false)
-    render json: {}, status: :ok
+    head :ok
   end
 
   private
