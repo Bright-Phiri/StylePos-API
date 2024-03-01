@@ -13,7 +13,7 @@ class Api::V1::CategoriesController < ApplicationController
 
   def show_items
     if @category.items_count.nil?
-      head :no_content
+      head :ok
     else
       items = @category.items
       items = items.paginate(page: params[:page], per_page: params[:per_page])
