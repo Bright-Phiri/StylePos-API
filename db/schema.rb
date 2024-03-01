@@ -42,21 +42,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "books", force: :cascade do |t|
-    t.string "title"
-    t.string "publisher"
-    t.string "user_user_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "items_count"
-    t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
   create_table "configs", force: :cascade do |t|
@@ -70,7 +61,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["phone_number"], name: "unique_customer_phone_numbers", unique: true
   end
 
   create_table "employees", force: :cascade do |t|
@@ -86,7 +76,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.integer "status"
-    t.index ["phone_number"], name: "unique_employees_phone_numbers", unique: true
   end
 
   create_table "inventory_levels", force: :cascade do |t|
@@ -96,7 +85,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.bigint "item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_inventory_levels_on_item_id", unique: true
+    t.index ["item_id"], name: "index_inventory_levels_on_item_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -108,7 +97,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.datetime "updated_at", null: false
     t.decimal "selling_price"
     t.string "barcode"
-    t.bigint "category_id", null: false
+    t.bigint "category_id"
     t.index ["category_id"], name: "index_items_on_category_id"
   end
 
