@@ -4,11 +4,21 @@ module ExceptionHandler
   extend ActiveSupport::Concern
   class InvalidUsername < StandardError; end
   class InvalidEmail < StandardError; end
+  class NotAuthorized < StandardError; end
+  class InvalidCredentials < StandardError; end
   class InventoryLevelError < StandardError; end
 
   included do
-    rescue_from ActiveRecord::RecordNotFound do
-      render json: { error: "Record not found" }, status: :not_found
+    rescue_from ExceptionHandler::NotAuthorized do |exception|
+      render json: { error: exception.message }, status: :unauthorized
+    end
+
+    rescue_from ExceptionHandler::InvalidCredentials do |exception|
+      render json: { error: exception.message }, status: :bad_request
+    end
+
+    rescue_from ActiveRecord::RecordNotFound do |exception|
+      render json: { error: exception.message }, status: :not_found
     end
 
     rescue_from ExceptionHandler::InvalidUsername do |exception|
