@@ -5,14 +5,18 @@ class ApplicationController < ActionController::API
   include ExceptionHandler
 
   def encode_token(payload)
-    # Set expiration time to 8 hours from now
-    payload[:exp] = 8.hours.from_now.to_i
-    JWT.encode(payload, Rails.application.credentials.secret_key_base)
+    payload[:exp] = 24.hours.from_now.to_i # Set expiration time to 24 hours from now
+    JWT.encode(payload, Rails.application.secrets.secret_key_base)
   end
 
   def auth_header
     # { Authorization: 'Bearer <token>' }
     request.headers['Authorization']
+  end
+
+  def decode_action_cable_token(auth_header)
+    token = auth_header.split(' ')[1]
+    decode_token(token)
   end
 
   def decode_token(token)
@@ -22,11 +26,6 @@ class ApplicationController < ActionController::API
     rescue JWT::DecodeError
       nil
     end
-  end
-
-  def decode_action_cable_token(auth_header)
-    token = auth_header.split(' ')[1]
-    decode_token(token)
   end
 
   def decoded_token
