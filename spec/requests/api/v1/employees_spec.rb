@@ -88,7 +88,7 @@ describe 'Employees API', type: :request do
       it 'returns a forbidden status' do
         post '/api/v1/employees/register', params: { employee: { user_name: 'johndoe', phone_number: '0993498444', email: 'johndoe@gmail.com', password: '12345678', password_confirmation: '12345678' } }
         expect(response).to have_http_status(:forbidden)
-        expect(JSON.parse(response.body)['message']).to eq('Access Denied: You do not have the required privileges to complete this action.')
+        expect(JSON.parse(response.body)['message']).to eq('Sorry, you are not authorized to perform this action.')
       end
     end
   end

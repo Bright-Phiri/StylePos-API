@@ -23,7 +23,7 @@ class Api::V1::EmployeesController < ApplicationController
 
   def set_manager
     if Employee.exists?
-      render json: { message: 'Access Denied: You do not have the required privileges to complete this action.' }, status: :forbidden
+      render json: { message: 'Sorry, you are not authorized to perform this action.' }, status: :forbidden
     else
       user = Employee.new(employee_params.merge(job_title: 'Store Manager'))
       if user.save

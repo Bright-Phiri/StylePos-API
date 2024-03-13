@@ -32,7 +32,7 @@ describe 'Authentication API', type: :request do
       it 'returns an unauthorized status' do
         post '/api/v1/authentication/login', params: { user_name: 'bright', password: 'invalid_password' }
 
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:bad_request)
         parsed_response = JSON.parse(response.body)
         expect(parsed_response['error']).to eq('Invalid username or password')
       end

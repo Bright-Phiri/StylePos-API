@@ -6,20 +6,16 @@ describe 'Categories API', type: :request do
   let(:user) { FactoryBot.create(:employee, first_name: 'John', last_name: 'Doe', user_name: 'johndoe', job_title: 'Store Manager', phone_number: '0993498444', email: 'johndoe@gmail.com', password: '12345678', password_confirmation: '12345678') }
   let(:headers) { authenticated_headers(user) }
 
-  before(:each) do
-    create(:category)
-  end
-
-  after(:each) do
-    Category.destroy_all
-  end
-
   describe 'GET /categories' do
+    before do
+      FactoryBot.create(:category, name: 'Clothing', description: 'Clothing')
+      FactoryBot.create(:category, name: 'Electronics', description: 'Electronics')
+    end
     it 'retuns all categories' do
       get '/api/v1/categories', headers: headers
 
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body).size).to eq(1)
+      expect(JSON.parse(response.body).size).to eq(2)
     end
   end
 
@@ -48,7 +44,7 @@ describe 'Categories API', type: :request do
 
   describe 'GET /categories/show_items/:id' do
     let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
-    let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', size: 'L', color: 'Black', barcode: 'GHGHG85944') }
+    let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', selling_price: '25000', size: 'L', color: 'Black', barcode: 'GHGHG85944') }
     context 'given category id that exists' do
       it 'retrieves items associated with the category' do
         get "/api/v1/categories/show_items/#{category.id}", headers: headers
@@ -75,8 +71,8 @@ describe 'Categories API', type: :request do
     context 'given valid attributes' do
       it 'creates a new category' do
         expect {
-          post '/api/v1/categories', params: { category: attributes_for(:category) }, headers: headers
-        }.to change { Category.count }.from(1).to(2)
+          post '/api/v1/categories', params: { category: { name: 'Cosmetics', description: 'Cosmetics' } }, headers: headers
+        }.to change { Category.count }.from(0).to(1)
         expect(response).to have_http_status(:created)
       end
     end
@@ -123,7 +119,7 @@ describe 'Categories API', type: :request do
     let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
     context 'given id that exists' do
       it 'deletes a category' do
-        expect { delete "/api/v1/categories/#{category.id}", headers: headers }.to change { Category.count }.from(2).to(1)
+        expect { delete "/api/v1/categories/#{category.id}", headers: headers }.to change { Category.count }.from(1).to(0)
         expect(response).to have_http_status(:no_content)
       end
     end

@@ -4,8 +4,8 @@ require 'rails_helper'
 
 RSpec.describe 'Inventory Levels API', type: :request do
   let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
-  let!(:item) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', size: 'L', color: 'Black') }
-  let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy H T-shirt', price: '25000', size: 'M', color: 'Black') }
+  let!(:item) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', selling_price: '25000', size: 'L', color: 'Black') }
+  let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy H T-shirt', price: '25000', selling_price: '25000', size: 'M', color: 'Black') }
   let(:user) { FactoryBot.create(:employee, first_name: 'John', last_name: 'Doe', user_name: 'johndoe', job_title: 'Store Manager', phone_number: '0993498444', email: 'johndoe@gmail.com', password: '12345678', password_confirmation: '12345678') }
   let(:headers) { authenticated_headers(user) }
 
