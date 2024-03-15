@@ -10,9 +10,9 @@ class Api::V1::LineItemsController < ApplicationController
 
   def update
     @line_item.destroy! if line_item_params[:quantity].to_i <= @line_item.quantity ||
-                            line_item_params[:quantity].to_i >= @line_item.quantity unless
-                            line_item_params[:quantity].to_i > @line_item.quantity + @line_item.item.inventory_level.quantity ||
-                            line_item_params[:quantity].to_i <= 0
+                           line_item_params[:quantity].to_i >= @line_item.quantity unless
+                           line_item_params[:quantity].to_i > @line_item.quantity + @line_item.item.inventory_level.quantity ||
+                           line_item_params[:quantity].to_i <= 0
     create_or_update_line_item(@line_item.order, @line_item.item)
   end
 
