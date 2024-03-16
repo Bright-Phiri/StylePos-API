@@ -2,6 +2,7 @@
 
 class Api::V1::CustomersController < ApplicationController
   before_action :set_customer, only: [:update, :show, :destroy]
+
   def index
     customers = Customer.all
     render json: customers

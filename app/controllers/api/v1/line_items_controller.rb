@@ -2,6 +2,7 @@
 
 class Api::V1::LineItemsController < ApplicationController
   before_action :set_line_item, only: [:update, :destroy, :apply_discount]
+
   def create
     order = Order.find(params[:order_id])
     item = Item.preload(:inventory_level).find(line_item_params[:item_id])

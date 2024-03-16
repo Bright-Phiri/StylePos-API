@@ -2,6 +2,7 @@
 
 class Api::V1::CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :show_items, :update, :destroy]
+
   def index
     categories = Category.all
     render json: categories

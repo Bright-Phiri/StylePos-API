@@ -2,6 +2,7 @@
 
 class Api::V1::AuthenticationController < ApplicationController
   skip_before_action :require_login, only: :login
+
   def login
     if Employee.exists?
       @user = Employee.find_by(user_name: params[:user_name])
@@ -17,7 +18,7 @@ class Api::V1::AuthenticationController < ApplicationController
 
   def authenticate_user(user)
     raise ExceptionHandler::InvalidCredentials, 'Invalid username or password' unless user.authenticate(params[:password])
-  
+
     if user.active_status?
       token = encode_token({ user_id: user.id, exp: 24.hours.from_now.to_i })
       render json: { user:, token: }, status: :ok
@@ -27,6 +28,6 @@ class Api::V1::AuthenticationController < ApplicationController
   end
 
   def user_params
-    params.permit(:user_name, :email, :password)
+    params.permit(:user_name, :password)
   end
 end

@@ -3,6 +3,7 @@
 class Api::V1::EmployeesController < ApplicationController
   skip_before_action :require_login, only: :set_manager
   before_action :set_employee, only: [:update, :show, :destroy, :disable_user, :activate_user]
+
   def index
     employees = Employee.where.not(job_title: 'Store Manager')
     render json: employees
