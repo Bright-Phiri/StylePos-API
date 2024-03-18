@@ -5,7 +5,7 @@ class Api::V1::AuthenticationController < ApplicationController
 
   def login
     if Employee.exists?
-      @user = Employee.find_by(user_name: params[:user_name])
+      @user = Employee.find_by(user_name: user_params[:user_name])
       raise ExceptionHandler::InvalidUsername, 'Username not found' unless @user.present?
 
       authenticate_user(@user)
@@ -17,7 +17,7 @@ class Api::V1::AuthenticationController < ApplicationController
   private
 
   def authenticate_user(user)
-    raise ExceptionHandler::InvalidCredentials, 'Invalid username or password' unless user.authenticate(params[:password])
+    raise ExceptionHandler::InvalidCredentials, 'Invalid username or password' unless user.authenticate(user_params[:password])
 
     if user.active_status?
       token = encode_token({ user_id: user.id, exp: 24.hours.from_now.to_i })
