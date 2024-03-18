@@ -101,7 +101,7 @@ describe 'Items API', type: :request do
         }, headers: headers
         expect(response).to have_http_status(:not_found)
         parsed_response = JSON.parse(response.body)
-        expect(parsed_response['error']).to include("Couldn't find Category with 'id'=999")
+        expect(parsed_response['error']).to include("Record not found")
       end
     end
   end

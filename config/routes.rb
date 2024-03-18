@@ -34,14 +34,14 @@ Rails.application.routes.draw do
       resources :customers
       resources :employees do
         collection do
-          post '/disable_user/:id', action: :disable_user, controller: 'employees'
-          post '/activate_user/:id', action: :activate_user, controller: 'employees'
+          patch '/disable_user/:id', action: :disable_user, controller: 'employees'
+          patch '/activate_user/:id', action: :activate_user, controller: 'employees'
           post '/register', action: :set_manager, controller: 'employees'
         end
         resources :orders, except: [:index, :show, :destory], shallow: true do
           resources :line_items, only: [:create, :update, :destroy] do
             collection do
-              put '/apply_discount/:id', action: :apply_discount, controller: 'line_items'
+              patch '/apply_discount/:id', action: :apply_discount, controller: 'line_items'
             end
           end
         end
@@ -53,7 +53,7 @@ Rails.application.routes.draw do
       end
       resources :passwords, except: [:index, :create, :show, :update, :destroy] do
         collection do
-          put '/update_password/:id', action: :change, controller: 'passwords'
+          patch '/update_password/:id', action: :change, controller: 'passwords'
           post '/forgot_password', action: :forgot, controller: 'passwords'
           post '/reset_password', action: :reset, controller: 'passwords'
         end

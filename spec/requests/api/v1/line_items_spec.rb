@@ -60,7 +60,7 @@ describe 'Line Items API', type: :request do
     end
   end
 
-  describe 'PUT /api/v1/orders/order_id/line_items/apply_discount/line_item_id' do
+  describe 'PATCH /api/v1/orders/order_id/line_items/apply_discount/line_item_id' do
     context 'given valid discount value' do
       it 'apply discount to line item' do
         post "/api/v1/orders/#{order.id}/line_items", params: { line_item: { item_id: item.id, quantity: 2 } }, headers: headers
@@ -68,7 +68,7 @@ describe 'Line Items API', type: :request do
         response_body = JSON.parse(response.body)
         order = Order.find(response_body['id'])
         line_item = order.line_items.last
-        put "/api/v1/orders/#{order.id}/line_items/apply_discount/#{line_item.id}", params: { line_item: { discount: 20 } }, headers: headers
+        patch "/api/v1/orders/#{order.id}/line_items/apply_discount/#{line_item.id}", params: { line_item: { discount: 20 } }, headers: headers
         cached_order = order.line_items.reload
         expect(response).to have_http_status(:ok)
         expect(cached_order.last.discount).to eq(20)
@@ -82,7 +82,7 @@ describe 'Line Items API', type: :request do
         response_body = JSON.parse(response.body)
         order = Order.find(response_body['id'])
         line_item = order.line_items.last
-        put "/api/v1/orders/#{order.id}/line_items/apply_discount/#{line_item.id}", params: { line_item: { discount: order.total + 200 } }, headers: headers
+        patch "/api/v1/orders/#{order.id}/line_items/apply_discount/#{line_item.id}", params: { line_item: { discount: order.total + 200 } }, headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
         expect(JSON.parse(response.body)).to be_an(Array)
       end

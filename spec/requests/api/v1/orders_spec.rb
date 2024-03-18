@@ -77,7 +77,6 @@ describe 'Orders API', type: :request do
         end.not_to change { Order.count }
         expect(response).to have_http_status(:not_found)
       end
-    end
-    
+    end    
   end
 end
