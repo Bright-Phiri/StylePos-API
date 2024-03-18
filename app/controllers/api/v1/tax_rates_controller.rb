@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::TaxRatesController < ApplicationController
-  before_action :set_tax_rate, only: [:update, :destroy]
+  before_action :set_tax_rate, only: [:update, :show, :destroy]
 
   def index
     render json: TaxRate.all
