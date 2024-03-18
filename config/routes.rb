@@ -17,7 +17,7 @@ Rails.application.routes.draw do
           resources :inventory_levels, except: [:index, :destroy]
         end
       end
-      resources :configurations
+      resources :tax_rates
       resources :inventory_levels, only: [:index, :destroy]
       resources :items, only: [:index, :destroy] do
         collection do

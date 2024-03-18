@@ -146,7 +146,7 @@ describe 'Employees API', type: :request do
     end
 
     context 'given id that does not exist' do
-      it 'deteles an employee' do
+      it 'returns not_found status code' do
         expect do
           delete "/api/v1/employees/#{employee.id}00", headers: headers
         end.not_to change { Employee.count }

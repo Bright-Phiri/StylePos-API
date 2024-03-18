@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_18_094454) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "items_count"
+    t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
   create_table "configs", force: :cascade do |t|
@@ -61,6 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["phone_number"], name: "unique_customers_phone_numbers", unique: true
   end
 
   create_table "employees", force: :cascade do |t|
@@ -76,6 +78,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.integer "status"
+    t.index ["phone_number"], name: "unique_employees_phone_numbers", unique: true
   end
 
   create_table "inventory_levels", force: :cascade do |t|
@@ -85,7 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.bigint "item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_inventory_levels_on_item_id"
+    t.index ["item_id"], name: "index_inventory_levels_on_item_id", unique: true
   end
 
   create_table "items", force: :cascade do |t|
@@ -97,7 +100,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.datetime "updated_at", null: false
     t.decimal "selling_price"
     t.string "barcode"
-    t.bigint "category_id"
+    t.bigint "category_id", null: false
     t.index ["category_id"], name: "index_items_on_category_id"
   end
 
@@ -134,10 +137,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_172231) do
     t.index ["order_id"], name: "index_returns_on_order_id"
   end
 
-  create_table "users", id: false, force: :cascade do |t|
-    t.string "user_name"
-    t.string "email"
-    t.string "phone"
+  create_table "tax_rates", force: :cascade do |t|
+    t.string "name"
+    t.decimal "rate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
