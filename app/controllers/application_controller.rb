@@ -12,6 +12,10 @@ class ApplicationController < ActionController::API
   protected
 
   def require_login
+    unless auth_header
+      render json: { status: 'token missing', message: 'Authorization header is missing' }, status: :unauthorized
+      return
+    end
     render json: { status: 'login', message: 'Please log in' }, status: :unauthorized unless logged_in?
   end
 
@@ -22,8 +26,10 @@ class ApplicationController < ActionController::API
   private
 
   def auth_header
-    # { Authorization: 'Bearer <token>' }
-    request.headers['Authorization']
+    header = request.headers['Authorization']
+    return header unless header.blank?
+
+    nil
   end
 
   def logged_in?
