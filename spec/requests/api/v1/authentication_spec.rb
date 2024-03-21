@@ -7,7 +7,7 @@ describe 'Authentication API', type: :request do
   describe 'POST /api/v1/authentication/login' do
     context 'given valid credentials' do
       it 'returns a token and user data' do
-        post '/api/v1/authentication/login', params: { user_name: 'bright', password: '12345678' }
+        post '/api/v1/authentication/login', params: { user: { user_name: 'bright', password: '12345678' } }
 
         parsed_response = JSON.parse(response.body)
         expect(response).to have_http_status(:ok)
@@ -20,7 +20,7 @@ describe 'Authentication API', type: :request do
     context 'the user is disabled' do
       it 'returns a locked status' do
         employee.update(status: 1)
-        post '/api/v1/authentication/login', params: { user_name: 'bright', password: '12345678' }
+        post '/api/v1/authentication/login', params: { user: { user_name: 'bright', password: '12345678' } }
 
         expect(response).to have_http_status(:locked)
         parsed_response = JSON.parse(response.body)
@@ -30,7 +30,7 @@ describe 'Authentication API', type: :request do
 
     context 'given invalid credentials' do
       it 'returns an unauthorized status' do
-        post '/api/v1/authentication/login', params: { user_name: 'bright', password: 'invalid_password' }
+        post '/api/v1/authentication/login', params: { user: { user_name: 'bright', password: 'invalid_password' } }
 
         expect(response).to have_http_status(:bad_request)
         parsed_response = JSON.parse(response.body)
@@ -40,7 +40,7 @@ describe 'Authentication API', type: :request do
 
     context 'username is does not exist' do
       it 'returns a not_found status code and error message' do
-        post '/api/v1/authentication/login', params: { user_name: 'nonexistent_user', password: '12345678' }
+        post '/api/v1/authentication/login', params: { user: { user_name: 'nonexistent_user', password: '12345678' } }
 
         expect(response).to have_http_status(:not_found)
         parsed_response = JSON.parse(response.body)
