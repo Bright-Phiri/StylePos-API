@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::API
-  before_action :require_login
+  before_action :authorize_request
   include ExceptionHandler
 
   def decode_action_cable_token(auth_header)
@@ -11,19 +11,16 @@ class ApplicationController < ActionController::API
 
   protected
 
-  def require_login
-    render json: { status: 'login', message: 'Please log in' }, status: :unauthorized unless logged_in?
+  def authorize_request
+    if auth_header.blank?
+      render_unauthorized('Token missing')
+    else
+      render_unauthorized('Unauthorized') unless logged_in?
+    end
   end
 
   def encode_token(payload)
-    JWT.encode(payload, Rails.application.credentials.secret_key_base)
-  end
-
-  private
-
-  def auth_header
-    # { Authorization: 'Bearer <token>' }
-    request.headers['Authorization']
+    JWT.encode(payload, secret_key_base)
   end
 
   def logged_in?
@@ -37,19 +34,29 @@ class ApplicationController < ActionController::API
     Employee.find_by(id: user_id)
   end
 
-  def decoded_token
-    return unless auth_header
+  private
 
+  def auth_header
+    request.headers['Authorization']
+  end
+
+  def decode_token(token)
+    JWT.decode(token, secret_key_base, true, algorithm: 'HS256')
+  rescue JWT::DecodeError => e
+    Rails.logger.error "JWT Decode Error: #{e.message}"
+    nil
+  end
+
+  def decoded_token
     token = auth_header.split(' ')[1]
     decode_token(token)
   end
 
-  def decode_token(token)
-    begin
-      decoded = JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256')
-      return decoded
-    rescue JWT::DecodeError
-      nil
-    end
+  def render_unauthorized(message)
+    render json: { status: 'login', message: }, status: :unauthorized
+  end
+
+  def secret_key_base
+    Rails.application.credentials.secret_key_base
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::PasswordsController < ApplicationController
-  skip_before_action :require_login, only: [:forgot, :reset, :change]
+  skip_before_action :authorize_request, only: [:forgot, :reset, :change]
   before_action :set_user, only: :change
 
   def change
