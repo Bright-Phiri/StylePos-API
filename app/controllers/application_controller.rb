@@ -20,7 +20,7 @@ class ApplicationController < ActionController::API
   end
 
   def encode_token(payload)
-    JWT.encode(payload, key)
+    JWT.encode(payload, hmac_secret)
   end
 
   def logged_in?
@@ -41,9 +41,8 @@ class ApplicationController < ActionController::API
   end
 
   def decode_token(token)
-    JWT.decode(token, key, true, algorithm: 'HS256')
-  rescue JWT::DecodeError => e
-    Rails.logger.error "JWT Decode Error: #{e.message}"
+    JWT.decode(token, hmac_secret, true, { algorithm: 'HS256' })
+  rescue JWT::DecodeError
     nil
   end
 
@@ -56,7 +55,7 @@ class ApplicationController < ActionController::API
     render json: { status: 'login', message: }, status: :unauthorized
   end
 
-  def key
+  def hmac_secret
     Rails.application.credentials.secret_key_base
   end
 end
