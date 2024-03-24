@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::AuthenticationController < ApplicationController
-  skip_before_action :authorize_request, only: :login
+  skip_before_action :authorize_request
 
   def login
     if Employee.exists?
