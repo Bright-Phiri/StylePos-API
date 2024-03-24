@@ -5,10 +5,10 @@ class Api::V1::AuthenticationController < ApplicationController
 
   def login
     if Employee.exists?
-      @user = Employee.find_by(user_name: user_params[:user_name])
-      raise ExceptionHandler::InvalidUsername, 'Username not found' unless @user.present?
+      user = Employee.find_by(user_name: user_params[:user_name])
+      raise ExceptionHandler::InvalidUsername, 'Username not found' unless user.present?
 
-      authenticate_user(@user)
+      authenticate_user(user)
     else
       render json: { error: 'No user account found' }, status: :not_found
     end
