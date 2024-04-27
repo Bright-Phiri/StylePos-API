@@ -4,13 +4,13 @@ require 'rails_helper'
 
 RSpec.describe 'Inventory Levels API', type: :request do
   let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
-  let!(:item) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', selling_price: '25000', size: 'L', color: 'Black') }
-  let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy H T-shirt', price: '25000', selling_price: '25000', size: 'M', color: 'Black') }
+  let!(:item) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', selling_price: '25000', reorder_level: 4, size: 'L', color: 'Black') }
+  let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy H T-shirt', price: '25000', selling_price: '25000', size: 'M', reorder_level: 4, color: 'Black') }
   let(:user) { FactoryBot.create(:employee, first_name: 'John', last_name: 'Doe', user_name: 'johndoe', job_title: 'Store Manager', phone_number: '0993498444', email: 'johndoe@gmail.com', password: '12345678', password_confirmation: '12345678') }
   let(:headers) { authenticated_headers(user) }
 
   before do
-    FactoryBot.create(:inventory_level, item:, quantity: 10, reorder_level: 4, supplier: 'Tommy Hilfiger')
+    FactoryBot.create(:inventory_level, item:, quantity: 10, supplier: 'Tommy Hilfiger')
   end
 
   describe 'GET /api/v1/inventory_levels' do
@@ -53,7 +53,7 @@ RSpec.describe 'Inventory Levels API', type: :request do
   describe 'POST /api/v1/items/:item_id/inventory_levels' do
     context 'given valid attributes' do
       it 'creates a new inventory level' do
-        inventory_level_params = { quantity: 10, reorder_level: 4, supplier: 'Tommy Hilfiger' }
+        inventory_level_params = { quantity: 10, supplier: 'Tommy Hilfiger' }
         post "/api/v1/items/#{item1.id}/inventory_levels", params: { inventory_level: inventory_level_params }, headers: headers
         expect(response).to have_http_status(:created)
         parsed_response = JSON.parse(response.body)
@@ -63,7 +63,7 @@ RSpec.describe 'Inventory Levels API', type: :request do
 
     context 'given invalid attributes' do
       it 'returns errors and unprocessable entity status code' do
-        inventory_level_params = { quantity: 'ffff', reorder_level: 'gjgjgjg', supplier: 'Tommy Hilfiger' }
+        inventory_level_params = { quantity: 'ffff', supplier: 'Tommy Hilfiger' }
         post "/api/v1/items/#{item1.id}/inventory_levels", params: { inventory_level: inventory_level_params }, headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
         parsed_response = JSON.parse(response.body)
@@ -73,10 +73,10 @@ RSpec.describe 'Inventory Levels API', type: :request do
 
     context 'inventory level already exists' do
       before do
-        FactoryBot.create(:inventory_level, item: item1, quantity: 10, reorder_level: 4, supplier: 'Tommy Hilfiger')
+        FactoryBot.create(:inventory_level, item: item1, quantity: 10, supplier: 'Tommy Hilfiger')
       end
       it 'returns an error message' do
-        inventory_level_params = { quantity: 'ffff', reorder_level: 'gjgjgjg', supplier: 'Tommy Hilfiger' }
+        inventory_level_params = { quantity: 'ffff', supplier: 'Tommy Hilfiger' }
         post "/api/v1/items/#{item1.id}/inventory_levels", params: { inventory_level: inventory_level_params }, headers: headers
         expect(response).to have_http_status(:bad_request)
         parsed_response = JSON.parse(response.body)
@@ -86,10 +86,10 @@ RSpec.describe 'Inventory Levels API', type: :request do
   end
 
   describe 'PUT /api/v1/inventory_levels/:id' do
-    let!(:inventory_level) { FactoryBot.create(:inventory_level, item: item1, quantity: 10, reorder_level: 4, supplier: 'Tommy Hilfiger') } 
+    let!(:inventory_level) { FactoryBot.create(:inventory_level, item: item1, quantity: 10, supplier: 'Tommy Hilfiger') } 
     context 'given invalid attributes' do
       it 'updates the inventory level' do
-        updated_params = { quantity: 15, reorder_level: 6, supplier: 'Updated Supplier' }
+        updated_params = { quantity: 15, supplier: 'Updated Supplier' }
         patch "/api/v1/inventory_levels/#{inventory_level.id}", params: { inventory_level: updated_params }, headers: headers
         expect(response).to have_http_status(:ok)
         parsed_response = JSON.parse(response.body)
@@ -99,7 +99,7 @@ RSpec.describe 'Inventory Levels API', type: :request do
 
     context 'given invalid attributes' do
       it 'returns unprocessable entity status when inventory level attributes are invalid' do
-        updated_params = { quantity: 0, reorder_level: 100, supplier: 'Updated Supplier' }
+        updated_params = { quantity: 0, supplier: 'Updated Supplier' }
         patch "/api/v1/inventory_levels/#{inventory_level.id}", params: { inventory_level: updated_params }, headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
       end
@@ -107,7 +107,7 @@ RSpec.describe 'Inventory Levels API', type: :request do
   end
 
   describe 'DELETE /api/v1/inventory_levels/:id' do
-    let!(:inventory_level) { FactoryBot.create(:inventory_level, item: item1, quantity: 10, reorder_level: 4, supplier: 'Tommy Hilfiger') }
+    let!(:inventory_level) { FactoryBot.create(:inventory_level, item: item1, quantity: 10, supplier: 'Tommy Hilfiger') }
     context 'inventory level exists' do
       it 'destroys the inventory level and returns no_content status code' do
         delete "/api/v1/inventory_levels/#{inventory_level.id}", headers: headers

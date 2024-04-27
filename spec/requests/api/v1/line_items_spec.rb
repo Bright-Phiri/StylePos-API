@@ -4,14 +4,14 @@ require 'rails_helper'
 
 describe 'Line Items API', type: :request do
   let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
-  let!(:item) { FactoryBot.create(:item, category:, name: 'Example Item', color: 'Blue', size: 'M', price: 100.0, selling_price: '25000', barcode: '1234567890') }
+  let!(:item) { FactoryBot.create(:item, category:, name: 'Example Item', color: 'Blue', size: 'M', reorder_level: 4, price: 100.0, selling_price: '25000', barcode: '1234567890') }
   let!(:employee) { FactoryBot.create(:employee, first_name: 'John', last_name: 'Doe', user_name: 'johndoe', job_title: 'Cashier', phone_number: '0993498444', email: 'johndoe@gmail.com', password: '12345678', password_confirmation: '12345678') }
   let!(:order) { FactoryBot.create(:order, employee:) }
   let(:user) { FactoryBot.create(:employee, first_name: 'test', last_name: 'Doe', user_name: 'Doe', job_title: 'Store Manager', phone_number: '0883498444', email: 'Doe@gmail.com', password: '12345678', password_confirmation: '12345678') }
   let(:headers) { authenticated_headers(user) }
 
   before do
-    FactoryBot.create(:inventory_level, item:, quantity: 10, reorder_level: 4, supplier: 'Tommy Hilfiger')
+    FactoryBot.create(:inventory_level, item:, quantity: 10, supplier: 'Tommy Hilfiger')
   end
 
   describe 'POST /api/v1/orders/:order_id/line_items' do

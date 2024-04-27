@@ -44,7 +44,7 @@ describe 'Categories API', type: :request do
 
   describe 'GET /categories/show_items/:id' do
     let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
-    let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', selling_price: '25000', size: 'L', color: 'Black', barcode: 'GHGHG85944') }
+    let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', selling_price: '25000', size: 'L', reorder_level: 4, color: 'Black', barcode: 'GHGHG85944') }
     context 'given category id that exists' do
       it 'retrieves items associated with the category' do
         get "/api/v1/categories/show_items/#{category.id}", headers: headers
