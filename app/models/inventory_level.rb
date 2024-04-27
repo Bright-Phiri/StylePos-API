@@ -5,7 +5,7 @@ class InventoryLevel < ApplicationRecord
   belongs_to :item
   validates :supplier, presence: true, allow_blank: true
   validates :quantity, numericality: { greater_than: 0, only_integer: true }
-  after_validation :set_stock_value
+  before_save :set_stock_value
   after_commit :check_inventory_level, on: [:create, :update]
   after_commit { DashboardBroadcastJob.perform_later('inventory') }
 
