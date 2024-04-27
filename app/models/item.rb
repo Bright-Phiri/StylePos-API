@@ -16,10 +16,8 @@ class Item < ApplicationRecord
   belongs_to :category, counter_cache: true
   validates_associated :line_items
   validates :name, :size, :color, presence: true
-  with_options numericality: { greater_than: 0 } do
-    validates :price, :selling_price
-    validates :reorder_level, only_integer: true
-  end
+  validates :price, :selling_price, numericality: { greater_than: 0 }
+  validates :reorder_level, numericality: { greater_than: 0, only_integer: true }
 
   def enough_inventory?(requested_quantity)
     raise ExceptionHandler::InventoryLevelError, 'Inventory level not added' unless inventory_level.present?
@@ -36,7 +34,7 @@ class Item < ApplicationRecord
   def stock_level
     return 'Not added' unless inventory_level.present?
 
-    if inventory_level.quantity <= inventory_level.reorder_level && inventory_level.quantity != 0
+    if inventory_level.quantity <= reorder_level && inventory_level.quantity != 0
       'Low stock'
     elsif inventory_level.quantity.zero?
       'Out of stock'

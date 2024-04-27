@@ -16,7 +16,7 @@ class ItemsRepresenter
         size: item.size,
         color: item.color,
         stock_level: item.stock_level,
-        inventory_level: item.inventory,
+        reorder_level: item.reorder_level,
         category_id: item.category.id,
         category_name: item.category.name
       }

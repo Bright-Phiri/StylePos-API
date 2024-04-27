@@ -12,7 +12,8 @@ class InventoriesRepresenter
         item: inventory.item_name,
         item_id: inventory.item_id,
         quantity: inventory.quantity,
-        reorder_level: inventory.reorder_level,
+        reorder_level: inventory.item.reorder_level,
+        stock_value: inventory.stock_value,
         supplier: inventory.supplier
       }
     end
