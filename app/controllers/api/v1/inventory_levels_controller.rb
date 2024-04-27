@@ -41,7 +41,7 @@ class Api::V1::InventoryLevelsController < ApplicationController
   private
 
   def inventory_level_params
-    params.require(:inventory_level).permit(:quantity, :reorder_level, :supplier)
+    params.require(:inventory_level).permit(:quantity, :supplier)
   end
 
   def set_inventory_level
