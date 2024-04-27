@@ -16,7 +16,10 @@ class Item < ApplicationRecord
   belongs_to :category, counter_cache: true
   validates_associated :line_items
   validates :name, :size, :color, presence: true
-  validates :price, :selling_price, numericality: { greater_than: 0 }
+  with_options numericality: { greater_than: 0 } do
+    validates :price, :selling_price
+    validates :reorder_level, only_integer: true
+  end
 
   def enough_inventory?(requested_quantity)
     raise ExceptionHandler::InventoryLevelError, 'Inventory level not added' unless inventory_level.present?

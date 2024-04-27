@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_18_094454) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_27_075842) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -83,11 +83,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_18_094454) do
 
   create_table "inventory_levels", force: :cascade do |t|
     t.integer "quantity"
-    t.integer "reorder_level"
     t.string "supplier"
     t.bigint "item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "stock_value"
     t.index ["item_id"], name: "index_inventory_levels_on_item_id", unique: true
   end
 
@@ -101,6 +101,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_18_094454) do
     t.decimal "selling_price"
     t.string "barcode"
     t.bigint "category_id", null: false
+    t.integer "reorder_level"
     t.index ["category_id"], name: "index_items_on_category_id"
   end
 
