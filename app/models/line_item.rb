@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class LineItem < ApplicationRecord
+  include TaxCalculations
   default_scope { order(:created_at).reverse_order }
   belongs_to :item
   belongs_to :order
@@ -14,15 +15,8 @@ class LineItem < ApplicationRecord
   after_commit { DashboardBroadcastJob.perform_later('line_items') }
   before_destroy :update_inventory_and_total_on_destroy
 
-  def self.calculate_tax(selling_price, requested_quantity)
-    total_price = selling_price * requested_quantity * (1 + (default_tax_rate.to_f / 100))
-    vat_amount = total_price - (selling_price * requested_quantity)
-    formated_vat = sprintf("%20.8g", vat_amount)
-    formated_vat.to_f.round(2)
-  end
-
   def self.calculate_total(selling_price, requested_quantity)
-    selling_price * requested_quantity * (1 + (default_tax_rate.to_f / 100))
+    selling_price * requested_quantity
   end
 
   def self.default_tax_rate

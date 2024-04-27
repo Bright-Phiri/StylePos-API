@@ -4,6 +4,7 @@ require 'barby'
 require 'barby/barcode/code_128'
 
 class Item < ApplicationRecord
+  include TaxCalculations
   scope :best_selling, -> { joins(:line_items).group(:id).order("SUM(line_items.quantity) DESC") }
   scope :slow_moving, -> { joins(:line_items).group(:id).order("SUM(line_items.quantity) ASC") }
   scope :out_of_stock, -> { joins(:inventory_level).where('inventory_levels.quantity = ?', 0) }
@@ -18,11 +19,17 @@ class Item < ApplicationRecord
   validates :name, :size, :color, presence: true
   validates :price, :selling_price, numericality: { greater_than: 0 }
   validates :reorder_level, numericality: { greater_than: 0, only_integer: true }
+  #after_validation :update_selling_price
 
   def enough_inventory?(requested_quantity)
     raise ExceptionHandler::InventoryLevelError, 'Inventory level not added' unless inventory_level.present?
 
     inventory_level.quantity.positive? && requested_quantity <= inventory_level.quantity
+  end
+
+  def update_selling_price
+    vat = Item.calculate_tax(self.selling_price, 1)
+    self.selling_price = self.selling_price + vat
   end
 
   def inventory
