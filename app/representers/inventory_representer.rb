@@ -10,6 +10,8 @@ class InventoryRepresenter
       id: inventory.id,
       item: inventory.item_name,
       item_id: inventory.item_id,
+      price: inventory.item.price,
+      selling_price: inventory.item.selling_price,
       quantity: inventory.quantity,
       supplier: inventory.supplier
     }
