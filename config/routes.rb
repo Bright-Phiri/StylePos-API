@@ -15,8 +15,10 @@ Rails.application.routes.draw do
         end
         resources :items, shallow: true, except: [:index, :destroy] do
           resources :inventory_levels, except: [:index, :destroy]
+          resources :received_items, only: :create
         end
       end
+      resources :received_items, except: :create
       resources :tax_rates
       resources :inventory_levels, only: [:index, :destroy]
       resources :items, only: [:index, :destroy] do
