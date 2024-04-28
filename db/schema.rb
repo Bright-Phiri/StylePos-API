@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_27_075842) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_28_103240) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -127,6 +127,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_27_075842) do
     t.index ["employee_id"], name: "index_orders_on_employee_id"
   end
 
+  create_table "received_items", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.integer "quantity"
+    t.string "batch_number"
+    t.string "supplier"
+    t.decimal "cost_price"
+    t.decimal "selling_price"
+    t.decimal "stock_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_received_items_on_item_id"
+  end
+
   create_table "returns", force: :cascade do |t|
     t.string "reason"
     t.decimal "refund_amount"
@@ -152,6 +165,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_27_075842) do
   add_foreign_key "line_items", "items"
   add_foreign_key "line_items", "orders"
   add_foreign_key "orders", "employees"
+  add_foreign_key "received_items", "items"
   add_foreign_key "returns", "items"
   add_foreign_key "returns", "orders"
 end
