@@ -2,7 +2,7 @@
 
 class ReceivedItem < ApplicationRecord
   belongs_to :item
-  validates :received_quantity, numericality: { only_integer: true, greater_than: 0 }
+  validates :quantity, numericality: { only_integer: true, greater_than: 0 }
   validates :batch_number, :supplier, presence: true, allow_blank: true
   validates :cost_price, :selling_price, numericality: true
   before_save :set_stock_value
