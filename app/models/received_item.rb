@@ -4,7 +4,7 @@ class ReceivedItem < ApplicationRecord
   belongs_to :item
   validates :quantity, numericality: { only_integer: true, greater_than: 0 }
   validates :batch_number, :supplier, presence: true, allow_blank: true
-  validates :cost_price, :selling_price, numericality: true
+  validates :cost_price, :selling_price, numericality: { greater_than: 0 }
   before_save :set_stock_value, :update_inventory
 
   def set_stock_value
