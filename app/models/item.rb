@@ -21,11 +21,16 @@ class Item < ApplicationRecord
   validates :price, :selling_price, numericality: { greater_than: 0 }
   validates :reorder_level, numericality: { greater_than: 0, only_integer: true }
   after_validation :update_selling_price
+  before_save :update_stock_value
 
   def enough_inventory?(requested_quantity)
     raise ExceptionHandler::InventoryLevelError, 'Inventory level not added' unless inventory_level.present?
 
     inventory_level.quantity.positive? && requested_quantity <= inventory_level.quantity
+  end
+
+  def update_stock_value
+    self.inventory_level.update_attribute(:stock_value, self.inventory_level.quantity * selling_price)
   end
 
   def update_selling_price

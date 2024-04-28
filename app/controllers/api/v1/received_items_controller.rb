@@ -14,8 +14,8 @@ class Api::V1::ReceivedItemsController < ApplicationController
 
   def create
     item = Item.find(params[:item_id])
-    received_item = item.received_items.create(received_item_params)
-    if received_item.persisted?
+    received_item = item.received_items.build(received_item_params)
+    if received_item.save
       render json: received_item, status: :created
     else
       render json: received_item.errors.full_messages, status: :unprocessable_entity
