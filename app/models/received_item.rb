@@ -10,4 +10,8 @@ class ReceivedItem < ApplicationRecord
   def set_stock_value
     self.stock_value = quantity * selling_price
   end
+
+  def update_inventory
+    self.item.inventory_level.quantity += quantity
+  end
 end
