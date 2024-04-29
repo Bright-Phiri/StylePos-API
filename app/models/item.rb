@@ -14,17 +14,25 @@ class Item < ApplicationRecord
   has_one :inventory_level, inverse_of: :item, dependent: :destroy
   has_many :line_items
   has_many :returns
+  has_many :received_items, dependent: :destroy
   belongs_to :category, counter_cache: true
   validates_associated :line_items
   validates :name, :size, :color, presence: true
   validates :price, :selling_price, numericality: { greater_than: 0 }
   validates :reorder_level, numericality: { greater_than: 0, only_integer: true }
-  #after_validation :update_selling_price
+  after_validation :update_selling_price
+  before_save :update_stock_value
 
   def enough_inventory?(requested_quantity)
     raise ExceptionHandler::InventoryLevelError, 'Inventory level not added' unless inventory_level.present?
 
     inventory_level.quantity.positive? && requested_quantity <= inventory_level.quantity
+  end
+
+  def update_stock_value
+    return unless inventory_level
+
+    self.inventory_level.update_attribute(:stock_value, self.inventory_level.quantity * selling_price)
   end
 
   def update_selling_price
