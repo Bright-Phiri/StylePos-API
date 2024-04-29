@@ -30,6 +30,8 @@ class Item < ApplicationRecord
   end
 
   def update_stock_value
+    return unless inventory_level
+
     self.inventory_level.update_attribute(:stock_value, self.inventory_level.quantity * selling_price)
   end
 
