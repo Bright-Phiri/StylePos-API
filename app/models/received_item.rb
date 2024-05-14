@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ReceivedItem < ApplicationRecord
+  scope :search, ->(query) { where("batch_number ILIKE :query OR supplier ILIKE :query OR CAST(price AS VARCHAR) ILIKE :query", query: "%#{query}%") if query.present? }
   belongs_to :item
   validates :quantity, numericality: { only_integer: true, greater_than: 0 }
   validates :batch_number, :supplier, presence: true, allow_blank: true
