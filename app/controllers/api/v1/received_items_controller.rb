@@ -4,8 +4,9 @@ class Api::V1::ReceivedItemsController < ApplicationController
   before_action :set_received_item, only: [:show, :update, :destroy]
 
   def index
-    received_items = ReceivedItem.preload(:item)
-    render json: ReceivedItemsRepresenter.new(received_items).as_json
+    received_items = ReceivedItem.preload(:item).search(params[:search])
+    received_items = received_items.paginate(page: params[:page], per_page: params[:per_page])
+    render json: { items: ReceivedItemsRepresenter.new(received_items).as_json, total: received_items.total_entries }
   end
 
   def show
