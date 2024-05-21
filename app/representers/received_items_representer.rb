@@ -16,7 +16,7 @@ class ReceivedItemsRepresenter
         batch_number: item.batch_number,
         stock_value: item.stock_value,
         supplier: item.supplier,
-        received_on: item.created_at
+        received_on: item.formatted_created_at
       }
     end
   end
