@@ -68,4 +68,3 @@ The following are required to run the Clothing Retail Stores API:
 
  ## Contributors 
  - [Bright](https://www.github.com/Bright-Phiri) - creator and maintainer
-
