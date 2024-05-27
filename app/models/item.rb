@@ -11,10 +11,12 @@ class Item < ApplicationRecord
   scope :in_stock, -> { joins(:inventory_level).where('inventory_levels.quantity > ?', 0) }
   scope :search, ->(query) { where("name ILIKE :query OR barcode ILIKE :query OR size ILIKE :query OR color ILIKE :query OR CAST(price AS VARCHAR) ILIKE :query", query: "%#{query}%") if query.present? }
 
-  has_one :inventory_level, inverse_of: :item, dependent: :destroy
   has_many :line_items
   has_many :returns
-  has_many :received_items, dependent: :destroy
+  with_options dependent: :destroy do |assoc|
+    assoc.has_many :received_items
+    assoc.has_one :inventory_level, inverse_of: :item
+  end
   belongs_to :category, counter_cache: true
   validates_associated :line_items
   validates :name, :size, :color, presence: true
