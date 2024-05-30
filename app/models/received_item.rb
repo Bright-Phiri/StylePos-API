@@ -7,8 +7,12 @@ class ReceivedItem < ApplicationRecord
   validates :quantity, numericality: { only_integer: true, greater_than: 0 }
   validates :batch_number, :supplier, presence: true, allow_blank: true
   validates :cost_price, :selling_price, numericality: { greater_than: 0 }
-  before_save :set_stock_value, :add_to_inventory, :update_prices
+  before_save :check_inventory, :set_stock_value, :add_to_inventory, :update_prices
   before_destroy :set_stock_value, :remove_from_inventory
+
+  def check_inventory
+    raise ExceptionHandler::InventoryLevelError, 'Inventory level not added for this item' unless item.inventory_level.present?
+  end
 
   def set_stock_value
     self.stock_value = quantity * selling_price
