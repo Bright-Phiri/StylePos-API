@@ -8,8 +8,8 @@ class LineItemRepresenter
   def as_json
     {
       id: line_item.id,
-      barcode: line_item.item.barcode,
-      item: line_item.item.name,
+      barcode: line_item.item&.barcode || "default barcode",
+      item: line_item.item&.name || "default item",
       quantity: line_item.quantity,
       discount: line_item.discount,
       price: line_item.price,
@@ -18,6 +18,7 @@ class LineItemRepresenter
       created_at: line_item.created_at
     }
   end
+    
 
   private
 
