@@ -9,17 +9,7 @@ class ApplicationController < ActionController::API
     decode_token(token)
   end
 
-  protected
-
-  def authorize_request
-    if auth_header.blank?
-      render_unauthorized 'Token missing'
-    else
-      render_unauthorized 'Invalid token format' and return unless auth_header.starts_with?('Bearer ')
-
-      render_unauthorized 'Unauthorized: Invalid or expired token' unless logged_in?
-    end
-  end
+  private
 
   def encode_token(payload)
     JWT.encode(payload, hmac_secret)
@@ -36,7 +26,15 @@ class ApplicationController < ActionController::API
     Employee.find_by(id: user_id)
   end
 
-  private
+  def authorize_request
+    if auth_header.blank?
+      render_unauthorized 'Token missing'
+    else
+      render_unauthorized 'Invalid token format' and return unless auth_header.starts_with?('Bearer ')
+
+      render_unauthorized 'Unauthorized: Invalid or expired token' unless logged_in?
+    end
+  end
 
   def auth_header
     request.headers['Authorization']
