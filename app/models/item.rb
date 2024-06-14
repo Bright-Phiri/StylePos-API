@@ -38,7 +38,7 @@ class Item < ApplicationRecord
   end
 
   def update_selling_price
-    vat = Item.calculate_tax(self.selling_price, 1)
+    vat = Item.calculate_VAT(self.selling_price, 1)
     self.selling_price = self.selling_price + vat
   end
 
