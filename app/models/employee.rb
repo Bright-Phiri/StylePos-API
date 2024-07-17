@@ -9,7 +9,7 @@ class Employee < ApplicationRecord
   validates :first_name, :last_name, presence: true, unless: -> { send(:store_manager?) }
   validates :password, length: { in: 6..8 }
   with_options presence: true do
-    validates :user_name, uniqueness: { conditions: -> { where(status: :active) } }, format: { without: /\s/, message: 'must contain no spaces' }
+    validates :user_name, uniqueness: { case_sensitive: false, conditions: -> { where(status: :active) }, format: { without: /\s/, message: 'must contain no spaces' } }
     validates :job_title, inclusion: { in: VALID_ROLES }
     with_options uniqueness: { case_sensitive: false } do
       validates :phone_number, phone_number: true, allow_blank: true
@@ -30,7 +30,7 @@ class Employee < ApplicationRecord
   def generate_password_token!
     self.reset_password_token = generate_token
     self.reset_password_sent_at = Time.now.utc
-    save!(validate: false)
+    save!(validate: false, touch: false)
   end
 
   def password_token_valid?
