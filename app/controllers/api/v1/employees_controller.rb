@@ -56,7 +56,7 @@ class Api::V1::EmployeesController < ApplicationController
 
   def activate_user
     @employee.status = 0
-    @employee.save(validate: false, touch: false)
+    @employee.save(validate: false,touch: false)
     head :ok
   end
 
