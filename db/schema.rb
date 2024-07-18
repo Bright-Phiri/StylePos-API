@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_28_103240) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_18_112108) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -62,7 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_28_103240) do
     t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["phone_number"], name: "unique_customer_phone_numbers", unique: true
+    t.index ["phone_number"], name: "unique_customers_phone_numbers", unique: true
   end
 
   create_table "employees", force: :cascade do |t|

@@ -14,7 +14,6 @@ module ClothingStoresApi
     config.load_defaults 7.0
     config.middleware.use ActionDispatch::Session::CookieStore, key: "_interslice_session"
     config.active_job.queue_adapter = :async
-
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
