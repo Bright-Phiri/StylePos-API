@@ -10,5 +10,7 @@ csv.each do |row|
   item = category.items.create(
     name: row[0], price: row[1], size: row[2], color: row[3],
     barcode: Item.generate_barcode({name: row[0], color: row[3], size: row[2]}),
-    selling_price: row[1].to_f + LineItem.calculate_VAT(row[1].to_f, 1))
+    selling_price: row[1].to_f + LineItem.calculate_VAT(row[1].to_f, 1),
+    reorder_level: 3
+    )
 end
