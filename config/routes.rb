@@ -10,9 +10,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :categories do
-        collection do
-          get '/show_items/:id', action: :show_items, controller: 'categories'
-        end
+        get 'show_items', on: :member
         resources :items, shallow: true, except: [:index, :destroy] do
           resources :inventory_levels, except: [:index, :destroy]
           resources :received_items, only: :create
@@ -28,36 +26,30 @@ Rails.application.routes.draw do
       end
       resources :returns, only: :index
       resources :orders, only: [:index, :show, :destroy] do
-        collection do
-          get '/filter_transactions', action: :find, controller: 'orders'
-        end
+        get 'search', on: :collection
         post '/return_item/:line_item_id', action: :return_item, controller: 'returns'
       end
       resources :customers
       resources :employees do
-        collection do
-          patch '/disable_user/:id', action: :disable_user, controller: 'employees'
-          patch '/activate_user/:id', action: :activate_user, controller: 'employees'
-          post '/register', action: :set_manager, controller: 'employees'
+        member do
+          patch 'disable_user'
+          patch 'activate_user'
         end
+        post 'register', on: :collection
         resources :orders, except: [:index, :show, :destory], shallow: true do
           resources :line_items, only: [:create, :update, :destroy] do
-            collection do
-              patch '/apply_discount/:id', action: :apply_discount, controller: 'line_items'
-            end
+            patch 'apply_discount', on: :member
           end
         end
       end
       resources :authentication, except: [:index, :create, :show, :update, :destroy] do
-        collection do
-          post '/login', action: :login, controller: 'authentication'
-        end
+        post 'login', on: :collection 
       end
       resources :passwords, except: [:index, :create, :show, :update, :destroy] do
+        patch 'update_password', on: :member
         collection do
-          patch '/update_password/:id', action: :change, controller: 'passwords'
-          post '/forgot_password', action: :forgot, controller: 'passwords'
-          post '/reset_password', action: :reset, controller: 'passwords'
+          post 'forgot_password'
+          post 'reset_password'
         end
       end
     end

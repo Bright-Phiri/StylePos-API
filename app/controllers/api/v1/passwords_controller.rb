@@ -14,7 +14,7 @@ class Api::V1::PasswordsController < ApplicationController
     end
   end
 
-  def forgot
+  def forgot_password
     user = Employee.find_by(email: user_params[:email])
     raise InvalidEmail, 'Email address not found' unless user.present?
 
@@ -23,7 +23,7 @@ class Api::V1::PasswordsController < ApplicationController
     render json: { message: 'A reset password link has been sent to your email' }, status: :ok
   end
 
-  def reset
+  def reset_password
     user = Employee.find_by(reset_password_token: user_params[:token])
     if user.present? && user.password_token_valid?
       if user.reset_password!(user_params[:password], user_params[:password_confirmation])

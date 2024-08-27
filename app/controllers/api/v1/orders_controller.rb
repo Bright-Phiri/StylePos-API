@@ -7,7 +7,7 @@ class Api::V1::OrdersController < ApplicationController
     render_orders(search: params[:search])
   end
 
-  def find
+  def search
     render_orders(filter: params[:selected_filter])
   end
 

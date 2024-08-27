@@ -22,7 +22,7 @@ class Api::V1::EmployeesController < ApplicationController
     end
   end
 
-  def set_manager
+  def register
     if Employee.exists?
       render json: { message: 'Sorry, you are not authorized to perform this action.' }, status: :forbidden
     else
