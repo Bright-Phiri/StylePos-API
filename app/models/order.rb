@@ -10,9 +10,9 @@ class Order < ApplicationRecord
   scope :statistics, -> { created_in(Date.current.year).select(:id, :created_at, 'COUNT(id)').group(:id) }
   scope :created_in, ->(year) { where('extract(year from created_at) = ?', year) if year.present? }
   scope :search, ->(query) { joins(:employee).where("employees.first_name ILIKE :query OR employees.last_name ILIKE :query OR CAST(orders.created_at AS TEXT) ILIKE :query OR CAST(total AS VARCHAR) ILIKE :query", query: "%#{query}%") if query.present? }
+  belongs_to :employee
   has_many :line_items, inverse_of: :order, dependent: :destroy
   has_many :returns
-  belongs_to :employee
 
   after_validation :initialize_order, on: :create
   after_create_commit { BroadcastTransactionJob.perform_later(self) }
