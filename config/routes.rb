@@ -21,13 +21,13 @@ Rails.application.routes.draw do
       resources :inventory_levels, only: [:index, :destroy]
       resources :items, only: [:index, :destroy] do
         collection do
-          get '/find_item/:barcode', action: :find_item, controller: 'items'
+          get 'find_item/:barcode', action: :find_item, controller: 'items'
         end
       end
       resources :returns, only: :index
       resources :orders, only: [:index, :show, :destroy] do
         get 'search', on: :collection
-        post '/return_item/:line_item_id', action: :return_item, controller: 'returns'
+        post 'return_item/:line_item_id', action: :return_item, controller: 'returns'
       end
       resources :customers
       resources :employees do
@@ -43,7 +43,7 @@ Rails.application.routes.draw do
         end
       end
       resources :authentication, except: [:index, :create, :show, :update, :destroy] do
-        post 'login', on: :collection 
+        post 'login', on: :collection
       end
       resources :passwords, except: [:index, :create, :show, :update, :destroy] do
         patch 'update_password', on: :member
