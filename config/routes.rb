@@ -39,7 +39,7 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :authentication, except: [:index, :create, :show, :update, :destroy] do
+      resources :authentication, only: [] do
         post 'login', on: :collection
       end
       resources :passwords, except: [:index, :create, :show, :update, :destroy] do
