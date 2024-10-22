@@ -16,7 +16,7 @@ class Api::V1::PasswordsController < ApplicationController
 
   def forgot_password
     user = Employee.find_by(email: user_params[:email])
-    raise InvalidEmail, 'Email address not found' unless user.present?
+    raise InvalidEmail unless user.present?
 
     user.generate_password_token!
     UserMailer.with(user:).password_reset.deliver_later

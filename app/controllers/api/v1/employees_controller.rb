@@ -5,7 +5,7 @@ class Api::V1::EmployeesController < ApplicationController
   before_action :set_employee, only: [:update, :show, :destroy, :disable_user, :activate_user]
 
   def index
-    employees = Employee.where.not(job_title: 'Store Manager')
+    employees = Employee.where.not(job_title: Employee::VALID_ROLES[1])
     render json: employees
   end
 
@@ -23,15 +23,13 @@ class Api::V1::EmployeesController < ApplicationController
   end
 
   def register
-    if Employee.exists?
-      render json: { message: 'Sorry, you are not authorized to perform this action.' }, status: :forbidden
+    raise ExceptionHandler::UnauthorizedAction if Employee.exists?
+
+    user = Employee.new(employee_params.merge(job_title: Employee::VALID_ROLES[1]))
+    if user.save
+      render json: user, status: :created
     else
-      user = Employee.new(employee_params.merge(job_title: 'Store Manager'))
-      if user.save
-        render json: user, status: :created
-      else
-        render json: user.errors.full_messages, status: :unprocessable_entity
-      end
+      render json: user.errors.full_messages, status: :unprocessable_entity
     end
   end
 
