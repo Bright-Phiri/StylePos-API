@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::API
-  before_action :authorize_request
   include ExceptionHandler
+  before_action :authorize_request
 
   def decode_action_cable_token(auth_header)
     token = auth_header.split(' ')[1]
