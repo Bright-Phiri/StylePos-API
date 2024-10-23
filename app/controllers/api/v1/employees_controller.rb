@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::EmployeesController < ApplicationController
-  skip_before_action :authorize_request, only: :set_manager
+  skip_before_action :authorize_request, only: :register
   before_action :set_employee, only: [:update, :show, :destroy, :disable_user, :activate_user]
 
   def index

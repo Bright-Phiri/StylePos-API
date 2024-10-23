@@ -36,7 +36,7 @@ module ExceptionHandler
     end
 
     rescue_from ExceptionHandler::UnauthorizedAction do |exception|
-      render json: { message: exception.message }, status: :unauthorized
+      render json: { message: exception.message }, status: :forbidden
     end
 
     rescue_from ExceptionHandler::InvalidCredentials, ExceptionHandler::InventoryLevelError do |exception|
