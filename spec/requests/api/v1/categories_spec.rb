@@ -42,12 +42,12 @@ describe 'Categories API', type: :request do
     end
   end
 
-  describe 'GET /categories/show_items/:id' do
+  describe 'GET /categories/:id/show_items' do
     let!(:category) { FactoryBot.create(:category, name: 'Clothing', description: 'Clothing') }
     let!(:item1) { FactoryBot.create(:item, category:, name: 'Tommy Hilfiger T-shirt', price: '24000', selling_price: '25000', size: 'L', reorder_level: 4, color: 'Black', barcode: 'GHGHG85944') }
     context 'given category id that exists' do
       it 'retrieves items associated with the category' do
-        get "/api/v1/categories/show_items/#{category.id}", headers: headers
+        get "/api/v1/categories/#{category.id}/show_items", headers: headers
 
         expect(response).to have_http_status(:ok)
         parsed_response = JSON.parse(response.body)
@@ -60,7 +60,7 @@ describe 'Categories API', type: :request do
 
     context 'given category id that does not exists' do
       it 'returns not_found status code' do
-        get "/api/v1/categories/show_items/#{category.id}00", headers: headers
+        get "/api/v1/categories/#{category.id}00/show_items", headers: headers
 
         expect(response).to have_http_status(:not_found)
       end

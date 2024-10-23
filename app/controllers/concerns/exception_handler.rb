@@ -43,8 +43,12 @@ module ExceptionHandler
       render_error(exception.message, :bad_request)
     end
 
-    rescue_from ExceptionHandler::InvalidUsername, ExceptionHandler::InvalidEmail, ActiveRecord::RecordNotFound do |exception|
-      render_error(exception.message || 'Record not found', :not_found)
+    rescue_from ExceptionHandler::InvalidUsername, ExceptionHandler::InvalidEmail do |exception|
+      render_error(exception.message, :not_found)
+    end
+
+    rescue_from ActiveRecord::RecordNotFound do
+      render_error('Record not found', :not_found)
     end
 
     rescue_from ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid, ActiveRecord::RecordNotDestroyed do |exception|

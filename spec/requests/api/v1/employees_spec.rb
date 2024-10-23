@@ -93,12 +93,12 @@ describe 'Employees API', type: :request do
     end
   end
 
-  describe 'PATCH /employees/disable_user/:id' do
+  describe 'PATCH /employees/:id/disable_user' do
     let!(:employee) { FactoryBot.create(:employee, first_name: 'John', last_name: 'Doe', user_name: 'johndoe', job_title: 'Cashier', phone_number: '0993498444', email: 'johndoe@gmail.com', password: '12345678', password_confirmation: '12345678') }
     let(:headers) { authenticated_headers(employee) }
     context 'given id that exists' do
       it 'disables the user' do
-        patch "/api/v1/employees/disable_user/#{employee.id}", headers: headers
+        patch "/api/v1/employees/#{employee.id}/disable_user", headers: headers
         expect(response).to have_http_status(:ok)
         expect(employee.reload.status).to eq("disabled")
       end
@@ -106,19 +106,19 @@ describe 'Employees API', type: :request do
 
     context 'given id that does not exist' do
       it 'returns not_found status code' do
-        patch "/api/v1/employees/disable_user/#{employee.id}00", headers: headers
+        patch "/api/v1/employees/#{employee.id}00/disable_user", headers: headers
         expect(response).to have_http_status(:not_found)
       end
     end
   end
 
-  describe 'PATCH /employees/activate_user/:id' do
+  describe 'PATCH /employees/:id/activate_user' do
     let!(:employee) { FactoryBot.create(:employee, first_name: 'John', last_name: 'Doe', user_name: 'johndoe', job_title: 'Cashier', phone_number: '0993498444', email: 'johndoe@gmail.com', password: '12345678', password_confirmation: '12345678') }
     let(:headers) { authenticated_headers(employee) }
 
     context 'given id that exists' do
       it 'activates the user' do
-        patch "/api/v1/employees/activate_user/#{employee.id}", headers: headers
+        patch "/api/v1/employees/#{employee.id}/activate_user", headers: headers
         expect(response).to have_http_status(:ok)
         expect(employee.reload.status).to eq("active")
       end
@@ -126,7 +126,7 @@ describe 'Employees API', type: :request do
 
     context 'given id that does not exist' do
       it 'returns not_found status code' do
-        patch "/api/v1/employees/activate_user/#{employee.id}00", headers: headers
+        patch "/api/v1/employees/#{employee.id}00/activate_user", headers: headers
         expect(response).to have_http_status(:not_found)
       end
     end
