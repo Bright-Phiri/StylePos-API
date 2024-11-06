@@ -6,7 +6,6 @@ class Employee < ApplicationRecord
   VALID_ROLES = ['Cashier', 'Store Manager'].freeze
 
   has_many :orders
-
   has_secure_password
 
   validates_associated :orders
