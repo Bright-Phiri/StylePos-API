@@ -2,22 +2,29 @@
 
 class Employee < ApplicationRecord
   enum :status, [:active, :disabled], suffix: true, default: :active
+
   VALID_ROLES = ['Cashier', 'Store Manager'].freeze
+
   has_many :orders
+
   has_secure_password
+
   validates_associated :orders
-  validates :first_name, :last_name, presence: true, unless: -> { send(:store_manager?) }
+  validates :first_name, :last_name, presence: true, unless: -> { store_manager? }
   validates :password, length: { in: 6..8 }
+
   with_options presence: true do
-    validates :user_name, uniqueness: { case_sensitive: false, conditions: -> { where(status: :active) }, format: { without: /\s/, message: 'must contain no spaces' } }
+    validates :user_name, uniqueness: { case_sensitive: false, conditions: -> { where(status: :active) },
+                                        format: { without: /\s/, message: 'must contain no spaces' } }
     validates :job_title, inclusion: { in: VALID_ROLES }
+
     with_options uniqueness: { case_sensitive: false } do
       validates :phone_number, phone_number: true, allow_blank: true
       validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: 'is invalid' }
     end
   end
 
-  with_options if: -> { send(:store_manager?) } do |manager|
+  with_options if: -> { store_manager? } do |manager|
     manager.validates :first_name, :last_name, presence: true, on: :update
   end
 

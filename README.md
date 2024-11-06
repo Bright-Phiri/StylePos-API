@@ -16,7 +16,7 @@ A StylePos API designed specifically for clothing retail stores. The API provide
 ## Requirements
 The following are required to run the Clothing Retail Stores API: 
 
-- Ruby 2.7+
+- Ruby 3.1+
 - Rails 7.0+
 - PostgreSql
 - Redis
