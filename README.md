@@ -52,16 +52,6 @@ The following are required to run the Clothing Retail Stores API:
    ```
    $ bin/rails server
    ```
-6. Start the Sidekiq server
-
-   ```
-   $ bin/bundle exec sidekiq
-   ```
-7. Start the Redis server
-
-   ```
-   $ bin/redis-server
-   ```
  
 ## Contributing:
 - Contributions to the project are welcome! If you find any issues or have suggestions for improvements, please submit a pull request or open an issue in the repository. 
