@@ -52,7 +52,21 @@ The following are required to run the Clothing Retail Stores API:
    ```
    $ bin/rails server
    ```
- 
+
+
+### Dealing with Missing `master.key` (Credentials Issue)
+If you encounter an error like "Couldn't decrypt config/credentials.yml.enc," it indicates that the `master.key` file, which is used to decrypt the credentials, is missing.
+
+To resolve this issue, follow these steps:
+
+1. **Remove the existing `credentials.yml.enc`:**
+
+2. **Recreate the credentials file:**
+
+Run the following command to generate a new `credentials.yml.enc` file:
+
+$ bin/rails credentials:edit
+This will open an editor to create new credentials.
 ## Contributing:
 - Contributions to the project are welcome! If you find any issues or have suggestions for improvements, please submit a pull request or open an issue in the repository. 
 
